@@ -1,0 +1,47 @@
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>Registration Information</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <form [formGroup]="registerForm" (ngSubmit)="registerUser($event)">
+
+    <ion-row>
+      <ion-col>
+        <ion-list>
+          <ion-item>
+            <ion-label fixed>Full Name</ion-label>
+            <ion-input formControlName="name" type="text"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label fixed>Email</ion-label>
+            <ion-input formControlName="email" type="email"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label fixed>Phone</ion-label>
+            <ion-input formControlName="phone" type="number"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label fixed>Matric No</ion-label>
+            <ion-input formControlName="matric_no" type="text"></ion-input>
+          </ion-item>
+
+          <ion-item>
+            <ion-label fixed>Password</ion-label>
+            <ion-input formControlName="password" type="password"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label fixed>Re-Password</ion-label>
+            <ion-input formControlName="re_password" type="password"></ion-input>
+          </ion-item>
+          <button ion-button full type="submit">Register</button>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </form>
+
+</ion-content>

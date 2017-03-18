@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-navbar menuToggle>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>VERIFY A MESSAGE</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-list>
+        <ion-item>
+            <ion-label *ngIf="_checkPrivate" color="blue">Public</ion-label>
+            <ion-label *ngIf="!_checkPrivate">Private</ion-label>
+            <ion-toggle value="foo" checked="{{ _checkPrivate }}" (ionChange)="checkClick()"></ion-toggle>
+        </ion-item>
+        <ion-item>
+            <ion-label floating>Your message to verify</ion-label>
+            <ion-textarea fz-elastic></ion-textarea>
+        </ion-item>
+        <button ion-button full (click)="submitForm()">Submit</button>
+    </ion-list>
+</ion-content>

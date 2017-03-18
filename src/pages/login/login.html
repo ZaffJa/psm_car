@@ -1,0 +1,30 @@
+<ion-content class="login" padding>
+    <form [formGroup]="loginForm" (ngSubmit)="doLogin($event)">
+        <ion-row>
+            <ion-col>
+                <img src="assets/icon/car-circle.png" alt="">
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <ion-item>
+                        <ion-label fixed>Username</ion-label>
+                        <ion-input formControlName="matric_no" type="text" value=""></ion-input>
+                    </ion-item>
+
+                    <ion-item>
+                        <ion-label fixed>Password</ion-label>
+                        <ion-input formControlName="password" type="password"></ion-input>
+                    </ion-item>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col class="signup-col">
+                <button ion-button full type="submit">Login</button>
+                <button ion-button full type="button" color="secondary" (click)="goToRegisterPage()">Register</button>
+            </ion-col>
+        </ion-row>
+    </form>
+</ion-content>

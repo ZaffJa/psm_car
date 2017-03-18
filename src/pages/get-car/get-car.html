@@ -1,0 +1,33 @@
+<ion-header>
+    <ion-navbar>
+        <!--<ion-icon name="menu" menuToggle padding></ion-icon>-->
+        <ion-title>RENT A CAR</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <br>
+    <br>
+    <ion-list>
+        <!--<ion-searchbar placeholder="Search location...">
+        </ion-searchbar>-->
+        <br>
+        <button ion-button full class="input" *ngIf="_pickup_time == null" (click)="presentModalChooseTime()">Choose Pickup Time</button>
+        <button ion-button full class="input" *ngIf="_pickup_time != null" color="secondary" (click)="presentModalChooseTime()">
+            Pickup At : {{ _pickup_time }}
+        </button>
+        <br>
+        <button ion-button full class="input" *ngIf="_duration == null" (click)="presentModalChooseDuration()">Choose Duration</button>
+        <button ion-button full class="input" *ngIf="_duration != null" (click)="presentModalChooseDuration()">
+            Duration : {{ _duration }} <br>
+            Price : RM {{ _price }}
+        </button>
+        <br>
+        <button ion-button full class="input" *ngIf="_pickup_location == null" (click)="presentModalChoosePickupLocation()">Choose Destination</button>
+        <button ion-button full class="input" *ngIf="_pickup_location != null" color="secondary" (click)="presentModalChoosePickupLocation()">
+            Pickup At : {{ _pickup_location }}
+        </button>
+        <br>
+    </ion-list>
+    <button ion-button full class="input submit" (click)="submitGetCar()">SUBMIT</button>
+
+</ion-content>
