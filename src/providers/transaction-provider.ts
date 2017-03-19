@@ -11,10 +11,7 @@ export class TransactionProvider {
 
     constructor(public http: Http, private userProvider: UserProvider) {}
 
-    public postGetRide(pickup_time: string, destination: any, pickup_location: any, price: number): Observable < any > {
-
-        let id: number;
-        this.userProvider.getId().then(id => id);
+    public postGetRide(pickup_time: string, destination: any, pickup_location: any, price: number, id: number): Observable < any > {
 
         let bodyString = JSON.stringify({
             'user_id': id,
@@ -30,10 +27,7 @@ export class TransactionProvider {
 
     }
 
-    public postGetCar(pickup_time: string, pickup_location: any, price: number, duration: string): Observable < any > {
-
-        let id: number;
-        this.userProvider.getId().then(id => id);
+    public postGetCar(pickup_time: string, pickup_location: any, price: number, duration: string, id: number): Observable < any > {
 
         let bodyString = JSON.stringify({
             'user_id': id,
@@ -45,6 +39,30 @@ export class TransactionProvider {
         });
 
         return this.http.post(UrlProvider.baseUrl() + 'transaction', bodyString, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+
+    public getHistory(id: number): Observable < any > {
+
+        return this.http.get(UrlProvider.baseUrl() + 'transactions?user_id=' + id, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+    public getRequest(): Observable < any > {
+
+        return this.http.get(UrlProvider.baseUrl() + 'transactions/owner', UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+    public acceptRequest(owner_id: number,transaction_id:number): Observable < any > {
+
+        let bodyString = JSON.stringify({
+            'user_id': owner_id,
+            'transaction_id': 1
+        });
+
+        return this.http.post(UrlProvider.baseUrl() + 'transaction/accept', bodyString, UrlProvider.baseHeader())
             .map((res: Response) => res.json());
 
     }

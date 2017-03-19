@@ -25,7 +25,17 @@ export class Login {
         public authService: AuthService,
         public fb: FormBuilder,
         private toastCtrl: ToastController,
-        public storage: Storage) {}
+        public storage: Storage) {
+
+        if (navParams.data.message != null) {
+
+            this.toastCtrl.create({
+                message: navParams.data.message,
+                duration: 1500,
+                position: 'bottom'
+            }).present();
+        }
+    }
 
     doLogin(event) {
         event.preventDefault();

@@ -9,7 +9,7 @@ import { DashboardPage } from '../dashboard/dashboard';
 
 // Providers
 import {TransactionProvider} from '../../providers/transaction-provider';
-
+import { UserProvider } from '../../providers/user-provider';
 @Component({
     selector: 'page-get-car',
     templateUrl: 'get-car.html'
@@ -22,12 +22,20 @@ export class GetCarPage {
     private _duration: any;
     private _hour: number;
     private _minute: number;
+    private user_id: number;
+
 
     constructor(public navCtrl: NavController,
         public navParams: NavParams,
         public modalCtrl: ModalController,
         private toastCtrl: ToastController,
-        private transactionProvider: TransactionProvider) {}
+        private transactionProvider: TransactionProvider,
+        private userProvider: UserProvider) {
+
+        this.userProvider.getId().then(id => this.user_id = id);
+
+
+    }
 
     presentModalChooseTime() {
         let modal = this.modalCtrl.create(ModalChooseTimePage);
@@ -75,8 +83,10 @@ export class GetCarPage {
                 this._pickup_time,
                 this._pickup_location,
                 this._price,
-                this._duration
-            ).subscribe(res => {
+                this._duration,
+                this.user_id
+
+            ).map(res => {
 
                 if (res.code == 500) {
 
@@ -105,5 +115,4 @@ export class GetCarPage {
             });
         }
     }
-
 }

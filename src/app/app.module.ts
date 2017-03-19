@@ -18,6 +18,7 @@ import {ModalChooseCarPage} from '../pages/modal-choose-car/modal-choose-car';
 import {ModalChoosePickupLocationPage} from '../pages/modal-choose-pickup-location/modal-choose-pickup-location';
 import {ModalChooseDurationPage} from '../pages/modal-choose-duration/modal-choose-duration';
 import {RegisterPage} from '../pages/register/register';
+import {HistoryPage} from '../pages/history/history';
 
 
 // Providers
@@ -30,30 +31,30 @@ import {UserProvider} from '../providers/user-provider';
 // Third party modules
 import {ElasticModule} from 'angular2-elastic';
 
-
 @NgModule({
-  declarations: [
-    Login, MyApp, GetCarPage, GiveCarPage, GetRidePage,
-    GiveRidePage, DashboardPage, ModalChooseTimePage, ModalChooseLocationPage,
-    ModalChooseCarPage, RegisterPage,ModalChoosePickupLocationPage,ModalChooseDurationPage
+    declarations: [
+        Login, MyApp, GetCarPage, GiveCarPage, GetRidePage,
+        GiveRidePage, DashboardPage, ModalChooseTimePage, ModalChooseLocationPage,
+        ModalChooseCarPage, RegisterPage, ModalChoosePickupLocationPage, ModalChooseDurationPage,
+        HistoryPage
 
-  ],
-  imports: [
-    IonicModule.forRoot(MyApp),
-    IonicStorageModule.forRoot(),
-    ElasticModule
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    Login, MyApp, GetCarPage, GiveCarPage,
-    GetRidePage, GiveRidePage, DashboardPage, ModalChooseTimePage,
-    ModalChooseLocationPage, ModalChooseCarPage, RegisterPage,
-    ModalChoosePickupLocationPage,ModalChooseDurationPage
-  ],
-  providers: [AuthService, LocationProvider, UrlProvider, TransactionProvider, UserProvider, {
-    provide: ErrorHandler,
-    useClass: IonicErrorHandler,
-  }]
+    ],
+    imports: [
+        IonicModule.forRoot(MyApp),
+        IonicStorageModule.forRoot(),
+        ElasticModule
+    ],
+    bootstrap: [IonicApp],
+    entryComponents: [
+        Login, MyApp, GetCarPage, GiveCarPage,
+        GetRidePage, GiveRidePage, DashboardPage, ModalChooseTimePage,
+        ModalChooseLocationPage, ModalChooseCarPage, RegisterPage,
+        ModalChoosePickupLocationPage, ModalChooseDurationPage,
+        HistoryPage
+    ],
+    providers: [AuthService, LocationProvider, UrlProvider, TransactionProvider, UserProvider, {
+        provide: ErrorHandler,
+        useClass: IonicErrorHandler,
+    }]
 })
-export class AppModule {
-}
+export class AppModule {}

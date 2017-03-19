@@ -14,8 +14,6 @@ import {DashboardPage} from '../dashboard/dashboard';
 // Providers
 import {TransactionProvider} from '../../providers/transaction-provider';
 import { UserProvider } from '../../providers/user-provider';
-
-
 @Component({
     selector: 'page-get-ride',
     templateUrl: 'get-ride.html'
@@ -28,6 +26,7 @@ export class GetRidePage {
     // private _car: string = "Choose Car (Optional)";
     private _pickup_location: string;
     private _price: number;
+    private user_id: number;
 
 
     constructor(public navCtrl: NavController,
@@ -37,20 +36,19 @@ export class GetRidePage {
         private transactionProvider: TransactionProvider,
         public storage: Storage,
         private userProvider: UserProvider) {
-            // this.storage.get('user').then(value => {
-            //     console.log('Hello');
-            //     console.log(value);
-            // });
 
-            this.userProvider.getId().then(id => console.log(id));
-            console.log('hello');
-        }
+        this.userProvider.getId().then(id => this.user_id = id);
+    }
 
 
     presentModalChooseTime() {
         let modal = this.modalCtrl.create(ModalChooseTimePage);
         modal.onDidDismiss(data => {
-            this._pickup_time = data.hour + " : " + data.minute + " " + data.am;
+
+            if (data != null) {
+                this._pickup_time = data.hour + " : " + data.minute + " " + data.am;
+
+            }
         });
         modal.present();
     }
@@ -58,9 +56,12 @@ export class GetRidePage {
     presentModalChooseLocation() {
         let modal = this.modalCtrl.create(ModalChooseLocationPage);
         modal.onDidDismiss(data => {
-            this._location_id = data.id;
-            this._location = data.name;
-            this._price = data.price_from_utm;
+            if (data != null) {
+                this._location_id = data.id;
+                this._location = data.name;
+                this._price = data.price_from_utm;
+            }
+
         });
         modal.present();
     }
@@ -68,25 +69,20 @@ export class GetRidePage {
     presentModalChoosePickupLocation() {
         let modal = this.modalCtrl.create(ModalChoosePickupLocationPage);
         modal.onDidDismiss(data => {
-            console.log(data);
-            this._pickup_location = data;
+
+            if (data != null) {
+                this._pickup_location = data;
+
+            }
         });
         modal.present();
     }
-
-    // presentModalChooseCar() {
-    //     let modal = this.modalCtrl.create(ModalChooseCarPage);
-    //     modal.onDidDismiss(data => {
-    //         this._car = data;
-    //     });
-    //     modal.present();
-    // }
 
     submitGetRide() {
 
         let checkAllSelected = false;
 
-        if (this._pickup_time == "Choose Pickup Time" || this._location == "Choose Destination" || this._pickup_location == "Choose Pickup Location") {
+        if (this._pickup_time == null || this._location == null || this._pickup_location == null) {
             checkAllSelected = true;
         }
 
@@ -98,25 +94,44 @@ export class GetRidePage {
             }).present()
 
         } else {
-
+            console.log(this._pickup_time +
+                this._location_id +
+                this._pickup_location +
+                this._price +
+                this.user_id);
             this.transactionProvider.postGetRide(
                 this._pickup_time,
                 this._location_id,
                 this._pickup_location,
-                this._price
+                this._price,
+                this.user_id,
+
             ).subscribe(res => {
+                console.log(res);
+                console.log(this.user_id);
+                if (res.code == 500) {
 
-                let toast = this.toastCtrl.create({
-                    message: 'Your request has been sent',
-                    duration: 1500,
-                    position: 'top'
-                });
+                    let toast = this.toastCtrl.create({
+                        message: 'Error in processing your request',
+                        duration: 1500,
+                        position: 'top'
+                    });
 
-                toast.onDidDismiss(() => {
-                    this.navCtrl.setRoot(DashboardPage);
-                });
+                    toast.present();
 
-                toast.present();
+                } else {
+                    let toast = this.toastCtrl.create({
+                        message: 'Your request has been sent',
+                        duration: 1500,
+                        position: 'top'
+                    });
+
+                    toast.onDidDismiss(() => {
+                        this.navCtrl.setRoot(DashboardPage);
+                    });
+
+                    toast.present();
+                }
 
             });
         }

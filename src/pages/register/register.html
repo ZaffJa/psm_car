@@ -1,47 +1,59 @@
 <ion-header>
 
-  <ion-navbar>
-    <ion-title>Registration Information</ion-title>
-  </ion-navbar>
+    <ion-navbar>
+        <ion-title>Registration Information</ion-title>
+    </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
-  <form [formGroup]="registerForm" (ngSubmit)="registerUser($event)">
+    <form [formGroup]="registerForm" (ngSubmit)="registerUser($event)">
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <ion-item>
+                        <ion-label fixed>Name</ion-label>
+                        <ion-input formControlName="name" type="text" placeholder="Your full name"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label fixed>Email</ion-label>
+                        <ion-input formControlName="email" type="email"  placeholder="Your email (optional)"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label fixed>Phone</ion-label>
+                        <ion-input formControlName="phone" type="number"  placeholder="Your phone number (optional)"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label fixed>Matric No</ion-label>
+                        <ion-input formControlName="matric_no" type="text"  placeholder="Your matric no"></ion-input>
+                    </ion-item>
 
-    <ion-row>
-      <ion-col>
-        <ion-list>
-          <ion-item>
-            <ion-label fixed>Full Name</ion-label>
-            <ion-input formControlName="name" type="text"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label fixed>Email</ion-label>
-            <ion-input formControlName="email" type="email"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label fixed>Phone</ion-label>
-            <ion-input formControlName="phone" type="number"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label fixed>Matric No</ion-label>
-            <ion-input formControlName="matric_no" type="text"></ion-input>
-          </ion-item>
+                    <ion-item>
+                        <ion-label fixed>Password</ion-label>
+                        <ion-input formControlName="password" type="password"  placeholder="Your password"></ion-input>
+                    </ion-item>
+                    <ion-item>
+                        <ion-label fixed>Re-Password</ion-label>
+                        <ion-input formControlName="re_password" type="password"  placeholder="Enter your password again"></ion-input>
+                    </ion-item>
 
-          <ion-item>
-            <ion-label fixed>Password</ion-label>
-            <ion-input formControlName="password" type="password"></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-label fixed>Re-Password</ion-label>
-            <ion-input formControlName="re_password" type="password"></ion-input>
-          </ion-item>
-          <button ion-button full type="submit">Register</button>
-        </ion-list>
-      </ion-col>
-    </ion-row>
-  </form>
+                    <div *ngIf="isToggled">
+                        <ion-item>
+                            <ion-label fixed>Car Model</ion-label>
+                            <ion-input formControlName="car_name" type="text" placeholder="Eg: Perodua Myvi"></ion-input>
+                        </ion-item>
+                    </div>
+
+                    <button ion-button full class="input submit" type="submit">Register</button>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </form>
+
+    <ion-item>
+        <ion-label> Do you have a car and want to <br> give rental or delivery service</ion-label>
+        <ion-toggle [(ngModel)]="isToggled"></ion-toggle>
+    </ion-item>
 
 </ion-content>
