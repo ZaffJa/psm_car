@@ -49,16 +49,22 @@ export class TransactionProvider {
             .map((res: Response) => res.json());
     }
 
-    public getRequest(): Observable < any > {
+    public getRequest(user_id:number): Observable < any > {
 
-        return this.http.get(UrlProvider.baseUrl() + 'transactions/owner', UrlProvider.baseHeader())
+        return this.http.get(UrlProvider.baseUrl() + 'transactions/owner?user_id=' + user_id, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+    public getDashboard(user_id:number): Observable < any > {
+
+        return this.http.get(UrlProvider.baseUrl() + 'dashboard?user_id=' + user_id, UrlProvider.baseHeader())
             .map((res: Response) => res.json());
     }
 
     public acceptRequest(owner_id: number,transaction_id:number): Observable < any > {
 
         let bodyString = JSON.stringify({
-            'user_id': owner_id,
+            'owner_id': owner_id,
             'transaction_id': 1
         });
 

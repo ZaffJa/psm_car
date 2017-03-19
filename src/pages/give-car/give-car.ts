@@ -23,14 +23,19 @@ export class GiveCarPage {
         public storage: Storage,
         public toastCtrl: ToastController) {
 
-        this.storage.get('user').then(user => this.user_id = user.id);
+        this.storage.get('user').then(user => {
+                this.user_id = user.id;
+                this.transactionProvider.getRequest(user.id).subscribe(res => {
+                    this._transactions = res;
+                    console.log(res);
+                });
+            }
+        );
 
-        this.transactionProvider.getRequest().subscribe(res => {
-            this._transactions = res;
-        });
+        
 
         Observable.interval(4000).subscribe(() => {
-            this.transactionProvider.getRequest().subscribe(res => {
+            this.transactionProvider.getRequest(this.user_id).subscribe(res => {
                 this._transactions = res;
             });
         })

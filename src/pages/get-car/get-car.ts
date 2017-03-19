@@ -16,8 +16,8 @@ import { UserProvider } from '../../providers/user-provider';
 })
 export class GetCarPage {
 
-    private _pickup_time: string = "Choose Pickup Time";
-    private _pickup_location: string = "Choose Pickup Location";
+    private _pickup_time: string;
+    private _pickup_location: string;
     private _price: number;
     private _duration: any;
     private _hour: number;
@@ -64,9 +64,10 @@ export class GetCarPage {
 
 
     submitGetCar() {
+        console.log('Submitting');
         let checkAllSelected = false;
 
-        if (this._pickup_time == "Choose Pickup Time" || this._duration == null || this._pickup_location == "Choose Pickup Location") {
+        if (this._pickup_time == null || this._duration == null || this._pickup_location == null) {
             checkAllSelected = true;
         }
 
@@ -86,7 +87,7 @@ export class GetCarPage {
                 this._duration,
                 this.user_id
 
-            ).map(res => {
+            ).subscribe(res => {
 
                 if (res.code == 500) {
 

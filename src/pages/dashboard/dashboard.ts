@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import {NavController, NavParams, ToastController} from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
+// Providers
+import {TransactionProvider} from '../../providers/transaction-provider';
+
 
 @Component({
     selector: 'page-dashboard',
@@ -9,10 +12,14 @@ import { Storage } from '@ionic/storage';
 })
 export class DashboardPage {
 
+    private dashboard:any;
+    private user:any;
+
     constructor(public navCtrl: NavController,
         public navParams: NavParams,
         private toastCtrl: ToastController,
-        public storage: Storage) {
+        public storage: Storage,
+        public transactionProvider: TransactionProvider) {
         if (navParams.data.message != null) {
 
             this.toastCtrl.create({
@@ -22,7 +29,13 @@ export class DashboardPage {
             }).present();
         }
 
-        this.storage.get('user').then(user => console.log(user));
+        this.storage.get('user').then(user => {
+            this.user = user;
+            this.transactionProvider.getDashboard(user.id).subscribe(res => {
+                this.dashboard = res;
+                console.log(res);
+            });
+        });
 
     }
 }

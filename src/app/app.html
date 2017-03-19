@@ -1,18 +1,18 @@
 <ion-menu [content]="content">
     <ion-header>
         <ion-toolbar>
-            <ion-title class="toolbar-background" style="color:white;">Menu</ion-title>
+            <ion-title class="toolbar-background">Menu</ion-title>
         </ion-toolbar>
     </ion-header>
     <ion-content class="menu">
-        <ion-list>
+        <ion-list padding>
             <ion-list>
                 <ion-item class="menu">
-                    <ion-avatar item-left>
+                    <!--<ion-avatar item-left>
                         <img src="../assets/img/lunar.jpg">
-                    </ion-avatar>
+                    </ion-avatar>-->
                     <h2>MOHD ZAFRI</h2>
-                    <h3>Don't Know What To Do!</h3>
+                    <!--<h3>Don't Know What To Do!</h3>-->
                 </ion-item>
             </ion-list>
             <div *ngIf="user">
@@ -24,7 +24,7 @@
 
             <button menuClose ion-item (click)="logout()" class="menu">
 
-              <ion-icon name="{{ car}}"></ion-icon>
+              <ion-icon name="exit"></ion-icon>
               LOGOUT
             </button>
         </ion-list>

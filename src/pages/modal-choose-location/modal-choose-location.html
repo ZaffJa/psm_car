@@ -16,7 +16,8 @@
     <ion-list>
         <ion-item (click)="dismiss(location)" *ngFor="let location of locations">
             <ion-avatar item-left>
-                <img src="">
+                <img src="{{ location.file_path}}" *ngIf="location.file_path">
+                <img src="assets/img/b_no_image_icon.gif" *ngIf="location.file_path == null">
             </ion-avatar>
             <h2>{{ location.name }}</h2>
             <p>Price UTM : {{ location.price_from_utm }} KM</p>

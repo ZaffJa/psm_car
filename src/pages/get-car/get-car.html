@@ -17,7 +17,7 @@
         </button>
         <br>
         <button ion-button full class="input" *ngIf="_duration == null" (click)="presentModalChooseDuration()">Choose Duration</button>
-        <button ion-button full class="input" *ngIf="_duration != null" (click)="presentModalChooseDuration()">
+        <button ion-button full class="input" *ngIf="_duration != null" color="secondary" (click)="presentModalChooseDuration()">
             Duration : {{ _duration }} <br>
             Price : RM {{ _price }}
         </button>

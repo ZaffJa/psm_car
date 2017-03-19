@@ -38,7 +38,7 @@ export class MyApp {
         this.storage.get('user').then(user => {
 
             if (user != null) {
-                this.rootPage = GiveCarPage;
+                this.rootPage = DashboardPage;
             } else {
                 this.rootPage = Login;
             }
@@ -52,60 +52,55 @@ export class MyApp {
         this.storage.get('user').then(user => {
             this.user = user;
             if (this.user != null) {
-                console.log(this.user);
                 if (this.user.role_id == 3) {
                     this.pages = [{
-                            title: 'DASHBOARD',
+                            title: 'HOME',
                             component: DashboardPage,
                             icon: 'home'
                         },
                         {
                             title: 'GET RIDE',
                             component: GetRidePage,
-                            icon: 'paw'
+                            
+                            icon: 'subway'
                         },
                         {
-                            title: 'GET CAR',
+                            title: 'RENT CAR',
                             component: GetCarPage,
                             icon: 'car'
                         },
                         {
-                            title: 'GIVE CAR',
+                            title: 'ACCEPT REQUEST',
                             component: GiveCarPage,
-                            icon: 'car'
-                        },
-                        {
-                            title: 'GIVE RIDE',
-                            component: GiveRidePage,
-                            icon: 'car'
+                            icon: 'list-box'
                         },
                         {
                             title: 'HISTORY',
                             component: HistoryPage,
-                            icon: 'clock'
+                            icon: 'book'
                         },
 
                     ];
                 } else if (this.user.role_id == 2) {
                     this.pages = [{
-                            title: 'DASHBOARD',
+                            title: 'HOME',
                             component: DashboardPage,
                             icon: 'home'
                         },
                         {
                             title: 'GET RIDE',
                             component: GetRidePage,
-                            icon: 'paw'
+                            icon: 'subway'
                         },
                         {
-                            title: 'GET CAR',
+                            title: 'RENT CAR',
                             component: GetCarPage,
                             icon: 'car'
                         },
                         {
                             title: 'HISTORY',
                             component: HistoryPage,
-                            icon: 'clock'
+                            icon: 'book'
                         },
                     ];
                 }

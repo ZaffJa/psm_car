@@ -4,25 +4,25 @@
         <ion-title>Dashboard</ion-title>
     </ion-navbar>
 </ion-header>
-<ion-content class="card-background-page">
+<ion-content class="card-background-page" *ngIf="user">
     <ion-card>
-        <img src="assets/img/car.jpeg" />
-        <div class="card-title">Ride Takens : 25</div>
-        <div class="card-subtitle">Payments : RM 100</div>
+        <img src="assets/icon/universe.png" />
+        <div class="card-title">Ride Takens : RM {{ dashboard?.ride_takens }}</div>
+        <div class="card-subtitle" style="font-size: x-large">Payments : RM {{ dashboard?.ride_takens_price }}</div>
+    </ion-card>
+    <ion-card *ngIf="user.role_id == 3">
+        <img src="assets/icon/universe.png" />
+        <div class="card-title">Ride Givens : RM {{ dashboard?.ride_givens }}</div>
+        <div class="card-subtitle">Payments : RM {{ dashboard?.ride_givens_price }}</div>
     </ion-card>
     <ion-card>
-        <img src="assets/img/car.jpeg" />
-        <div class="card-title">Ride Givens : 25</div>
-        <div class="card-subtitle">Payments : RM 100</div>
+       <img src="assets/icon/sky-night-space-trees.jpeg" />
+        <div class="card-title">Rent Takens : RM {{ dashboard?.rent_takens }}</div>
+        <div class="card-subtitle">Payments : RM {{ dashboard?.rent_takens_price }}</div>
     </ion-card>
-    <ion-card>
-       <img src="assets/img/car.jpeg" />
-        <div class="card-title">Rent Takens : 25</div>
-        <div class="card-subtitle">Payments : RM 100</div>
-    </ion-card>
-    <ion-card>
-        <img src="assets/img/car.jpeg" />
-        <div class="card-title">Rent Givens : 25</div>
-        <div class="card-subtitle">Payments : RM 100</div>
+    <ion-card *ngIf="user.role_id == 3">
+        <img src="assets/icon/sky-night-space-trees.jpeg" />
+        <div class="card-title">Rent Givens : RM {{ dashboard?.rent_givens }}</div>
+        <div class="card-subtitle">Payments : RM {{ dashboard?.rent_givens_price }}</div>
     </ion-card>
 </ion-content>

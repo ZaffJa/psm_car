@@ -13,6 +13,7 @@
             <h2>Destination : {{ transaction.location?.name }} </h2>
             <p>Price : RM {{ transaction?.price }}</p>
             <p>Pickup Time : {{ transaction?.pickup_time }}</p>
+            <p>Pickup Location : {{ transaction?.pickup_location }}</p>
             <button ion-button clear item-right (click)="showConfirm(transaction?.id)">Accept</button>
         </ion-item>
         <ion-item *ngIf="transaction.request_type == 2">
