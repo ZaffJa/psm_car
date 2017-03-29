@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, NavParams, ViewController } from 'ionic-angular';
+import { NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
 import { LocationProvider } from '../../providers/location-provider';
 
 import { Geolocation } from '@ionic-native/geolocation';
@@ -15,52 +15,63 @@ export class ModalChooseLocationPage {
   private items: any;
   static allItems: any;
   private currentLocation: any;
+  private loader: any;
 
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     public viewCtrl: ViewController,
     public locationProvider: LocationProvider,
-    private geolocation: Geolocation) { }
+    private geolocation: Geolocation,
+    public loadingCtrl: LoadingController) {
+
+  }
 
   ngOnInit() {
 
-    this.geolocation.getCurrentPosition().then((resp) => {
+    console.log(this.navParams.get('userCoordinate'));
 
-      this.currentLocation = resp.coords;
+    // let loader = this.loadingCtrl.create({
+    //   content: "Please wait...",
+    //   duration: 3000
+    // });
+    // loader.present();
+    // this.geolocation.getCurrentPosition().then((resp) => {
+
+    //   this.currentLocation = {
+    //     lng: resp.coords.longitude,
+    //     lat: resp.coords.latitude
+    //   }
+
+    this.initializeItems();
+
+    //   loader.dismiss();
 
 
-      let dummyLocation = {
-        lng: 103.629184,
-        lat: 1.542449
-      };
-
-      let dummyDestination = {
-        lng: resp.coords.longitude,
-        lat: resp.coords.latitude
-      }
-
-      console.log(this.getDistanceBetweenPoints(dummyLocation, dummyDestination, 'km'))
-      console.log(resp);
-      // resp.coords.latitude
-      // resp.coords.longitude
-      this.initializeItems();
-    }).catch((error) => {
-      console.log('Error getting location', error);
-    });
+    // }).catch((error) => {
+    //   console.log('Error getting location', error);
+    // });
 
   }
 
 
   initializeItems() {
     this.locationProvider.getLocations().subscribe(res => {
+
       this.locations = res.data;
       this.items = []; // reset items
 
+
+
+      this.currentLocation = this.navParams.get('userCoordinate');
+
       for (let i = 0; i < this.locations.length; i++) {
+        this.locations[i].price = this.getPrice(this.locations[i].lat, this.locations[i].lng, this.locations[i].price_from_utm);
+        this.locations[i].distance = this.getDistance(this.locations[i].lat, this.locations[i].lng);
         this.items.push(this.locations[i]);
       }
       ModalChooseLocationPage.allItems = this.items;
+
     });
   }
 
@@ -79,8 +90,8 @@ export class ModalChooseLocationPage {
     }
   }
 
-  dismiss(item) {
-    this.viewCtrl.dismiss(item);
+  dismiss(item, price) {
+    this.viewCtrl.dismiss(item, price);
   }
 
   toRad(x) {
@@ -113,16 +124,21 @@ export class ModalChooseLocationPage {
 
   }
 
-  getPrice() {
-    let dummyDestination = {
-      lng: 103.629184,
-      lat: 1.542449
+  getPrice(lat, lng, price) {
+    let destination = {
+      lng: lng,
+      lat: lat
     };
-    let dummyLocation = {
-      lng: this.currentLocation.longitude,
-      lat: this.currentLocation.latitude
-    }
-    return this.getDistanceBetweenPoints(dummyLocation, dummyDestination, 'km');
+    return Math.round(this.getDistanceBetweenPoints(this.currentLocation, destination, 'km') * price);
+  }
+
+  getDistance(lat, lng) {
+    let destination = {
+      lng: lng,
+      lat: lat
+    };
+
+    return this.getDistanceBetweenPoints(this.currentLocation, destination, 'km');
   }
 
 }

@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
+import { Http } from '@angular/http';
+import { Geolocation } from '@ionic-native/geolocation';
+
+
+// Pages
+import { DashboardPage } from '../dashboard/dashboard';
+
+// Modals
 import { ModalChooseTimePage } from '../modal-choose-time/modal-choose-time';
 import { ModalChooseDurationPage } from '../modal-choose-duration/modal-choose-duration';
 import { ModalChoosePickupLocationPage } from '../modal-choose-pickup-location/modal-choose-pickup-location';
-import { DashboardPage } from '../dashboard/dashboard';
 
 // Providers
-import {TransactionProvider} from '../../providers/transaction-provider';
+import { TransactionProvider } from '../../providers/transaction-provider';
 import { UserProvider } from '../../providers/user-provider';
 @Component({
     selector: 'page-get-car',
@@ -17,8 +24,14 @@ export class GetCarPage {
     private _pickup_time: string;
     private _pickup_location: string;
     private _price: number;
-    private _duration: any;
+    private _seater: number;
+    private _duration: string;
     private user_id: number;
+    private tzoffset: any;
+    private localISOTime: any;
+    private currentLocation: any;
+    private userCoordinate: any;
+
 
 
     constructor(public navCtrl: NavController,
@@ -26,36 +39,81 @@ export class GetCarPage {
         public modalCtrl: ModalController,
         private toastCtrl: ToastController,
         private transactionProvider: TransactionProvider,
-        private userProvider: UserProvider) {
+        private userProvider: UserProvider,
+        private geolocation: Geolocation,
+        public http: Http) {
 
+        this.tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
+        this._seater = 5;
+        this._price = 0;
         this.userProvider.getId().then(id => this.user_id = id);
-
-
     }
 
-    presentModalChooseTime() {
-        let modal = this.modalCtrl.create(ModalChooseTimePage);
-        modal.onDidDismiss(data => {
-            this._pickup_time = data.hour + " : " + data.minute + " " + data.am;
-        });
-        modal.present();
+    getLatLng() {
+
+        if (this._pickup_location == null || this._pickup_location == '') {
+            this.geolocation.getCurrentPosition().then((resp) => {
+
+                let lng = resp.coords.longitude;
+                let lat = resp.coords.latitude;
+
+                this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=AIzaSyDUkgjuoLswQLC8m9SeWWr8hoES3PZ3Ark')
+                    .subscribe((res: any) => {
+
+                        if (res.json().status == "OK") {
+                            this._pickup_location = res.json().results[0].formatted_address;
+                            this.userCoordinate = res.json().results[0].geometry.location;
+                        } else {
+                            this.toastCtrl.create({
+                                message: 'Error! Please insert correct address',
+                                duration: 1500,
+                                position: 'top'
+                            }).present()
+                            console.log(res.json());
+                        }
+                    });
+
+            }).catch((error) => {
+                console.log('Error getting location', error);
+            });
+        } else {
+            let uri = encodeURIComponent(this._pickup_location);
+            return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + uri + '&=AIzaSyDUkgjuoLswQLC8m9SeWWr8hoES3PZ3Ark')
+                .subscribe(res => {
+                    if (res.json().status == "OK") {
+                        this._pickup_location = res.json().results[0].formatted_address;
+                        this.userCoordinate = res.json().results[0].geometry.location;
+                    } else {
+                        this.toastCtrl.create({
+                            message: 'Error! Please insert correct address',
+                            duration: 1500,
+                            position: 'top'
+                        }).present()
+                        console.log(res.json());
+                    }
+                });
+        }
     }
 
-    presentModalChooseDuration() {
-        let modal = this.modalCtrl.create(ModalChooseDurationPage);
-        modal.onDidDismiss(data => {
-            this._duration = data.hour + " H : " + data.minute + "M";
-            this._price = data.hour * 5 + data.minute * 0.12;
-        });
-        modal.present();
-    }
+    getPrice() {
 
-    presentModalChoosePickupLocation() {
-        let modal = this.modalCtrl.create(ModalChoosePickupLocationPage);
-        modal.onDidDismiss(data => {
-            this._pickup_location = data;
-        });
-        modal.present();
+        if (this._duration) {
+            let time = this._duration.split(':');
+            let hours = parseInt(time[0]);
+            let minutes = parseInt(time[1]);
+
+            if (this._seater == 5) {
+                this._price = hours * 5 + minutes * 0.12;
+            } else if (this._seater == 7) {
+                this._price = hours * 7 + minutes * 0.12;
+            } else if (this._seater == 9) {
+                this._price = hours * 9 + minutes * 0.12;
+            }
+        } else {
+            this._price = 0;
+        }
+
     }
 
 
@@ -63,10 +121,9 @@ export class GetCarPage {
         console.log('Submitting');
         let checkAllSelected = false;
 
-        if (this._pickup_time == null || this._duration == null || this._pickup_location == null) {
+        if (this._duration == null || this._pickup_location == null) {
             checkAllSelected = true;
         }
-
         if (checkAllSelected) {
             this.toastCtrl.create({
                 message: 'You must fill all the inputs given',
@@ -77,7 +134,8 @@ export class GetCarPage {
         } else {
 
             this.transactionProvider.postGetCar(
-                this._pickup_time,
+                this.localISOTime,
+                this._seater,
                 this._pickup_location,
                 this._price,
                 this._duration,

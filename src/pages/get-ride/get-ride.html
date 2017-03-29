@@ -42,7 +42,7 @@
             <ion-col col-6>
                 <ion-item>
                     <ion-label>Time</ion-label>
-                    <ion-datetime displayFormat="HH:mm" pickerFormat="HH mm" [(ngModel)]="localISOTime"></ion-datetime>
+                    <ion-datetime displayFormat="HH:mm a" pickerFormat="HH mm a" [(ngModel)]="localISOTime"></ion-datetime>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -52,6 +52,9 @@
                     <ion-label stacked style="font-size: large" color="primary">Choose Pickup Location</ion-label>
                     <ion-input [(ngModel)]="_pickup_location" name="_pickup_location" placeholder="Eg:- L01 KTHO" type="text" required>
                     </ion-input>
+                    <button ion-button item-right (click)="getLatLng()">
+                    <ion-icon name="locate"></ion-icon>
+                </button>
                 </ion-item>
             </ion-col>
         </ion-row>
@@ -62,7 +65,7 @@
                         Choose Destination
                     </ion-label>
                     <ion-label *ngIf="_location != null">
-                        Destination : {{ _location }} <br> Price : RM {{ _price }}
+                        Destination : {{ _location }} <br> Price : {{ _price | currency:'MYR':true:'1.2-2' }}
                     </ion-label>
                     <button ion-button item-right outline (click)="presentModalChooseLocation()">
                         <ion-icon name="create"></ion-icon>
@@ -76,7 +79,6 @@
         <ion-toolbar>
             <ion-title>
                 <button ion-button full class="input" (click)="submitGetRide()">SUBMIT</button>
-
             </ion-title>
         </ion-toolbar>
     </ion-footer>

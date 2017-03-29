@@ -5,11 +5,9 @@
     </ion-navbar>
 </ion-header>
 <ion-content padding>
-    <br>
-    <br>
-    <ion-list>
-        <!--<ion-searchbar placeholder="Search location...">
-        </ion-searchbar>-->
+    <!--<ion-list>
+        <ion-searchbar placeholder="Search location...">
+        </ion-searchbar>
         <br>
         <button ion-button full class="input" *ngIf="_pickup_time == null" (click)="presentModalChooseTime()">Choose Pickup Time</button>
         <button ion-button full class="input" *ngIf="_pickup_time != null" color="secondary" (click)="presentModalChooseTime()">
@@ -27,7 +25,71 @@
             Pickup At : {{ _pickup_location }}
         </button>
         <br>
-    </ion-list>
-    <button ion-button full class="input submit" (click)="submitGetCar()">SUBMIT</button>
+    </ion-list>-->
+    <ion-row>
+        <ion-col col-12>
+            <ion-item>
+                <ion-label stacked style="font-size: large" color="primary">Choose Pickup Time</ion-label>
+            </ion-item>
+        </ion-col>
+        <ion-col col-6>
+            <ion-item>
+                <ion-label>Date</ion-label>
+                <ion-datetime displayFormat="MMMM DD" pickerFormat="DD MMMM" [(ngModel)]="localISOTime"></ion-datetime>
+            </ion-item>
+        </ion-col>
+        <ion-col col-6>
+            <ion-item>
+                <ion-label>Time</ion-label>
+                <ion-datetime displayFormat="HH:mm a" pickerFormat="HH mm a" [(ngModel)]="localISOTime"></ion-datetime>
+            </ion-item>
+        </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-12>
+            <ion-item>
+                <ion-label stacked style="font-size: large" color="primary">Choose Pickup Location</ion-label>
+                <ion-input [(ngModel)]="_pickup_location" name="_pickup_location" placeholder="Eg:- L01 KTHO" type="text" required>
+                </ion-input>
+                <button ion-button item-right (click)="getLatLng()">
+                    <ion-icon name="locate"></ion-icon>
+                </button>
+            </ion-item>
+        </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-12>
+            <ion-item>
+                <ion-label stacked style="font-size: large" color="primary">Choose Duration</ion-label>
+                <ion-datetime displayFormat="HH:mm" pickerFormat="HH mm" [(ngModel)]="_duration" (ionChange)="getPrice()"></ion-datetime>
+                <button ion-button item-right>
+                <ion-icon name="time"></ion-icon>
+            </button>
+            </ion-item>
+        </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-12>
+            <ion-item>
+                <ion-label stacked style="font-size: large" color="primary">Choose Seater</ion-label>
+                <ion-range min="5" max="10" step="2" pin="true" snaps="true" [(ngModel)]="_seater" (ionChange)="getPrice()" color="primary">
+                    <ion-icon range-left small color="primary" name="car"></ion-icon>
+                    <ion-icon range-right color="primary" name="car"></ion-icon>
+                </ion-range>
+            </ion-item>
+        </ion-col>
+    </ion-row>
+    <ion-row>
+        <ion-col col-12>
+            Price: {{ _price | currency:'MYR':true:'1.2-2' }}
+        </ion-col>
+    </ion-row>
 
+    <ion-footer>
+        <ion-toolbar>
+            <ion-title>
+                <button ion-button full class="input" (click)="submitGetCar()">SUBMIT</button>
+            </ion-title>
+        </ion-toolbar>
+    </ion-footer>
 </ion-content>

@@ -25,23 +25,23 @@ export class RegisterPage {
         public authService: AuthService) {
 
         this.registerForm = this.fb.group({
-            name: ["Mohd Zafri", Validators.compose(
+            name: ["", Validators.compose(
                 [Validators.required,
                 Validators.minLength(5),
                 Validators.pattern('[a-zA-Z ]*') // Accepts alphabets and spaces only
                 ])],
-            phone: ["0174403225", Validators.compose([
+            phone: ["", Validators.compose([
                 Validators.required,
                 Validators.minLength(10),
                 ValidationService.phoneValidator,
                 Validators.maxLength(11)
             ])],
-            matric_no: ["A13CS0059", Validators.compose(
+            matric_no: ["", Validators.compose(
                 [Validators.required,
                 Validators.pattern('^[a-zA-Z][1-9]{2}[a-zA-Z]{2}[0-9]{4}$') // Only accepts string like A12CS0011
                 ])],
-            password: ["123", Validators.required],
-            re_password: ["123", Validators.compose([
+            password: ["", Validators.required],
+            re_password: ["", Validators.compose([
                 Validators.required,
             ])],
             car_name: ["", Validators.pattern('[a-zA-Z ]*')],

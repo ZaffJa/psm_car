@@ -27,10 +27,11 @@ export class TransactionProvider {
 
     }
 
-    public postGetCar(pickup_time: string, pickup_location: any, price: number, duration: string, id: number): Observable<any> {
+    public postGetCar(pickup_time: string, seater: number, pickup_location: any, price: number, duration: string, id: number): Observable<any> {
 
         let bodyString = JSON.stringify({
             'user_id': id,
+            'seater': seater,
             'pickup_time': pickup_time,
             'pickup_location': pickup_location,
             'duration': duration,

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
 import { Geolocation } from '@ionic-native/geolocation';
+import { Http } from '@angular/http';
 
 // Modals
 import { ModalChooseTimePage } from '../modal-choose-time/modal-choose-time';
@@ -14,10 +15,12 @@ import { DashboardPage } from '../dashboard/dashboard';
 // Providers
 import { TransactionProvider } from '../../providers/transaction-provider';
 import { UserProvider } from '../../providers/user-provider';
+
 @Component({
     selector: 'page-get-ride',
     templateUrl: 'get-ride.html'
 })
+
 export class GetRidePage {
 
     private _location: string;
@@ -30,6 +33,7 @@ export class GetRidePage {
     private tzoffset: any;
     private localISOTime: any;
     private currentLocation: any;
+    private userCoordinate: any;
 
 
     constructor(public navCtrl: NavController,
@@ -39,38 +43,63 @@ export class GetRidePage {
         private transactionProvider: TransactionProvider,
         public storage: Storage,
         private userProvider: UserProvider,
-        private geolocation: Geolocation) {
+        private geolocation: Geolocation,
+        public http: Http) {
 
         this.tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
         this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
 
         this.userProvider.getId().then(id => this.user_id = id);
-
-        this.geolocation.getCurrentPosition().then((resp) => {
-
-            this.currentLocation = resp.coords;
-
-            let dummyLocation = {
-                lng: 103.629184,
-                lat: 1.542449
-            };
-
-            let dummyDestination = {
-                lng: resp.coords.longitude,
-                lat: resp.coords.latitude
-            }
-
-            console.log(this.getDistanceBetweenPoints(dummyLocation, dummyDestination, 'km'))
-            console.log(resp);
-            // resp.coords.latitude
-            // resp.coords.longitude
-        }).catch((error) => {
-            console.log('Error getting location', error);
-        });
     }
 
+    getLatLng() {
+
+        if (this._pickup_location == null || this._pickup_location == '') {
+            this.geolocation.getCurrentPosition().then((resp) => {
+
+                let lng = resp.coords.longitude;
+                let lat = resp.coords.latitude;
+
+                this.http.get('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&key=AIzaSyDUkgjuoLswQLC8m9SeWWr8hoES3PZ3Ark')
+                    .subscribe((res: any) => {
+
+                        if (res.json().status == "OK") {
+                            this._pickup_location = res.json().results[0].formatted_address;
+                            this.userCoordinate = res.json().results[0].geometry.location;
+                        } else {
+                            this.toastCtrl.create({
+                                message: 'Error! Please insert correct address',
+                                duration: 1500,
+                                position: 'top'
+                            }).present()
+                            console.log(res.json());
+                        }
+                    });
+
+            }).catch((error) => {
+                console.log('Error getting location', error);
+            });
+        } else {
+            let uri = encodeURIComponent(this._pickup_location);
+            return this.http.get('https://maps.googleapis.com/maps/api/geocode/json?address=' + uri + '&=AIzaSyDUkgjuoLswQLC8m9SeWWr8hoES3PZ3Ark')
+                .subscribe(res => {
+                    if (res.json().status == "OK") {
+                        this._pickup_location = res.json().results[0].formatted_address;
+                        this.userCoordinate = res.json().results[0].geometry.location;
+                    } else {
+                        this.toastCtrl.create({
+                            message: 'Error! Please insert correct address',
+                            duration: 1500,
+                            position: 'top'
+                        }).present()
+                        console.log(res.json());
+                    }
+                });
+        }
+    }
 
     presentModalChooseTime() {
+
         let modal = this.modalCtrl.create(ModalChooseTimePage);
         modal.onDidDismiss(data => {
 
@@ -83,15 +112,28 @@ export class GetRidePage {
     }
 
     presentModalChooseLocation() {
-        let modal = this.modalCtrl.create(ModalChooseLocationPage);
-        modal.onDidDismiss(data => {
-            if (data != null) {
-                this._location_id = data.id;
-                this._location = data.name;
-                this._price = data.price_from_utm;
-            }
-        });
-        modal.present();
+
+        if (this._pickup_location == null || this._pickup_location == '') {
+
+            this.toastCtrl.create({
+                message: 'Please choose pickup location first',
+                duration: 1500,
+                position: 'top'
+            }).present()
+
+        } else {
+            let modal = this.modalCtrl.create(ModalChooseLocationPage, {
+                userCoordinate: this.userCoordinate
+            });
+            modal.onDidDismiss(data => {
+                if (data != null) {
+                    this._location_id = data.id;
+                    this._location = data.name;
+                    this._price = data.price;
+                }
+            });
+            modal.present();
+        }
     }
 
     presentModalChoosePickupLocation() {
@@ -106,6 +148,8 @@ export class GetRidePage {
         modal.present();
     }
 
+
+
     submitGetRide() {
 
         this.localISOTime = this.localISOTime.replace("T", " ");
@@ -114,7 +158,7 @@ export class GetRidePage {
 
         let checkAllSelected = false;
 
-        if (this._location == null || this._pickup_location == null) {
+        if (this._pickup_location == null) {
             checkAllSelected = true;
         }
 
@@ -164,39 +208,4 @@ export class GetRidePage {
             });
         }
     }
-
-
-    toRad(x) {
-        return x * Math.PI / 180;
-    }
-
-    getDistanceBetweenPoints(start, end, units) {
-
-        let earthRadius = {
-            miles: 3958.8,
-            km: 6371
-        };
-
-        let R = earthRadius[units || 'miles'];
-        let lat1 = start.lat;
-        let lon1 = start.lng;
-        let lat2 = end.lat;
-        let lon2 = end.lng;
-
-        let dLat = this.toRad((lat2 - lat1));
-        let dLon = this.toRad((lon2 - lon1));
-        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-            Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
-            Math.sin(dLon / 2) *
-            Math.sin(dLon / 2);
-        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        let d = R * c;
-
-        return d;
-
-    }
-
-
-
-
 }

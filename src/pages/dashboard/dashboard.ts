@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController, } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController, ViewController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 // Providers
@@ -20,46 +20,38 @@ export class DashboardPage {
         private toastCtrl: ToastController,
         public storage: Storage,
         public transactionProvider: TransactionProvider,
-        public loadingCtrl: LoadingController) {
+        public loadingCtrl: LoadingController,
+        private viewCtrl: ViewController) { }
 
-
-        // let loader = this.loadingCtrl.create({
-        //     content: "Please wait...",
-        //     duration: 3000
-        // });
-        // loader.present();
-
-
-    }
-
-    ionViewDidLoad() {
-
+    ionViewWillEnter() {
         this.storage.get('user').then(user => {
 
-            if (this.navParams.data.message != null) {
+            // if (this.navParams.data.message != null) {
 
-                this.toastCtrl.create({
-                    message: this.navParams.data.message,
-                    duration: 1500,
-                    position: 'bottom'
-                }).present();
-            }
+            //     this.toastCtrl.create({
+            //         message: this.navParams.data.message,
+            //         duration: 1500,
+            //         position: 'bottom'
+            //     }).present();
+            // }
 
             this.user = user;
+
             if (user != null) {
                 this.transactionProvider.getDashboard(user.id).subscribe(res => {
                     this.dashboard = res;
-                    // loader.dismiss();
+
                 });
             }
 
         });
+
     }
 
     doRefresh(refresher) {
         console.log('Begin async operation', refresher);
 
-        this.ionViewDidLoad();
+        this.ionViewWillEnter();
 
         setTimeout(() => {
             console.log('Async operation has ended');

@@ -27,7 +27,6 @@ export class MyApp {
 
     rootPage: any;
     user: any;
-    private name: string;
 
     pages: Array<{
         title: string,
@@ -38,8 +37,14 @@ export class MyApp {
 
     constructor(public platform: Platform, private storage: Storage, private authService: AuthService) {
 
-        this.rootPage = DashboardPage;
-        this.user = this.storage.get('user').then(res => { return res });
+        this.user = this.storage.get('user').then(res => {
+            if (res != null) {
+                this.rootPage = DashboardPage;
+
+            } else {
+                this.rootPage = Login;
+            }
+        });
 
         this.pages = [{
             title: 'REQUEST RIDE',
@@ -55,11 +60,6 @@ export class MyApp {
             title: 'REQUEST DELIVERY',
             component: GiveCarPage,
             icon: 'list-box'
-        },
-        {
-            title: 'GOOGLE MAPS',
-            component: GoogleMapsPage,
-            icon: 'maps'
         },
         {
             title: 'MY HISTORY',
