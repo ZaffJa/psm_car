@@ -6,16 +6,12 @@ import { Storage } from '@ionic/storage';
 import {TransactionProvider} from '../../providers/transaction-provider';
 import { UserProvider } from '../../providers/user-provider';
 
-import {Observable} from 'rxjs/Rx';
-
-
 @Component({
     selector: 'page-history',
     templateUrl: 'history.html'
 })
 export class HistoryPage {
 
-    private user_id: number;
     private _transactions: any;
 
     constructor(public navCtrl: NavController,

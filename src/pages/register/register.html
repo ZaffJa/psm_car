@@ -1,59 +1,72 @@
 <ion-header>
-
     <ion-navbar>
         <ion-title>Registration Information</ion-title>
     </ion-navbar>
-
 </ion-header>
 
-
 <ion-content padding>
-    <form [formGroup]="registerForm" (ngSubmit)="registerUser($event)">
-        <ion-row>
+    <form [formGroup]="registerForm">
+        <ion-row responsive-sm>
             <ion-col>
                 <ion-list>
                     <ion-item>
-                        <ion-label fixed>Name</ion-label>
-                        <ion-input formControlName="name" type="text" placeholder="Your full name"></ion-input>
+                        <ion-label color="primary" fixed>Name</ion-label>
+                        <ion-input id="name" formControlName="name" type="text" placeholder="Your full name" required></ion-input>
                     </ion-item>
+                    <control-messages [control]="registerForm.controls.name"></control-messages>
+                    <!--<p ion-text *ngIf="registerForm.get('name').errors?.pattern && registerForm.get('name').dirty" color="danger" padding-left>
+                        Your name must only contain alphabets and spaces
+                    </p>-->
                     <ion-item>
-                        <ion-label fixed>Email</ion-label>
-                        <ion-input formControlName="email" type="email"  placeholder="Your email (optional)"></ion-input>
+                        <ion-label color="primary" fixed>Phone</ion-label>
+                        <ion-input formControlName="phone" type="text" placeholder="Your phone number"></ion-input>
                     </ion-item>
+                    <control-messages [control]="registerForm.controls.phone"></control-messages>
                     <ion-item>
-                        <ion-label fixed>Phone</ion-label>
-                        <ion-input formControlName="phone" type="number"  placeholder="Your phone number (optional)"></ion-input>
+                        <ion-label color="primary" fixed>Matric No</ion-label>
+                        <ion-input formControlName="matric_no" type="text" placeholder="Your matric no"></ion-input>
                     </ion-item>
+                    <control-messages [control]="registerForm.controls.matric_no"></control-messages>
+                    <p ion-text *ngIf="registerForm.get('matric_no').errors?.alreadyExist" color="danger" padding-left>
+                        {{ registerForm.get('matric_no').value }} has already been registered to the system
+                    </p>
                     <ion-item>
-                        <ion-label fixed>Matric No</ion-label>
-                        <ion-input formControlName="matric_no" type="text"  placeholder="Your matric no"></ion-input>
+                        <ion-label color="primary" fixed>Password</ion-label>
+                        <ion-input formControlName="password" type="password" placeholder="Your password"></ion-input>
                     </ion-item>
-
+                    <control-messages [control]="registerForm.controls.password"></control-messages>
                     <ion-item>
-                        <ion-label fixed>Password</ion-label>
-                        <ion-input formControlName="password" type="password"  placeholder="Your password"></ion-input>
+                        <ion-label color="primary" fixed>Re-Password </ion-label>
+                        <ion-input formControlName="re_password" type="password" placeholder="Enter your password again"></ion-input>
                     </ion-item>
-                    <ion-item>
-                        <ion-label fixed>Re-Password</ion-label>
-                        <ion-input formControlName="re_password" type="password"  placeholder="Enter your password again"></ion-input>
-                    </ion-item>
-
-                    <div *ngIf="isToggled">
+                    <control-messages [control]="registerForm.controls.re_password"></control-messages>
+                    <p ion-text *ngIf="registerForm.get('re_password').errors?.passwordsShouldMatch  && registerForm.get('re_password').dirty" color="danger" padding-left>
+                        Mismatch passwords
+                    </p>
+                    <div [hidden]="!registerForm.get('isToggled').value === true">
                         <ion-item>
-                            <ion-label fixed>Car Model</ion-label>
+                            <ion-label color="primary" fixed>Car Model</ion-label>
                             <ion-input formControlName="car_name" type="text" placeholder="Eg: Perodua Myvi"></ion-input>
                         </ion-item>
+                        <p ion-text [hidden]="registerForm.controls.car_name.valid || (registerForm.controls.car_name.pristine && !submitted)" color="danger" padding-left>
+                            Your car model can only contain alphabets and spaces
+                        </p>
+                        <ion-item *ngIf="!registerForm.controls.car_name.valid && !registerForm.controls.car_name.pending && (registerForm.controls.car_name.dirty || submitted)">
+                            <p>Sorry, that username can not be used!</p>
+                        </ion-item>
                     </div>
-
-                    <button ion-button full class="input submit" type="submit">Register</button>
                 </ion-list>
+
+                <ion-item>
+                    <ion-label> Do you have a car and want to <br> give rental or delivery service</ion-label>
+                    <ion-toggle formControlName="isToggled"></ion-toggle>
+                </ion-item>
+            </ion-col>
+        </ion-row>
+        <ion-row responsive-sm>
+            <ion-col>
+                <button ion-button (click)="onRegister(registerForm)" color="secondary" type="submit" [disabled]="!registerForm.valid" block>Register</button>
             </ion-col>
         </ion-row>
     </form>
-
-    <ion-item>
-        <ion-label> Do you have a car and want to <br> give rental or delivery service</ion-label>
-        <ion-toggle [(ngModel)]="isToggled"></ion-toggle>
-    </ion-item>
-
 </ion-content>

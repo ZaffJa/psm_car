@@ -1,6 +1,6 @@
 <ion-content class="login" padding>
-    <form [formGroup]="loginForm" (ngSubmit)="doLogin($event)">
-        <ion-row>
+    <form #loginForm="ngForm" novalidate>
+        <ion-row responsive-sm>
             <ion-col>
                 <img src="assets/icon/car-circle.png" alt="">
             </ion-col>
@@ -9,21 +9,34 @@
             <ion-col>
                 <ion-list>
                     <ion-item>
-                        <ion-label fixed>Username</ion-label>
-                        <ion-input formControlName="matric_no" type="text" value=""></ion-input>
+                        <ion-label stacked color="primary">Matric No</ion-label>
+                        <ion-input [(ngModel)]="login.matric_no" name="matric_no" type="text" minlength="9" maxlength="9" #username="ngModel" spellcheck="false" autocapitalize="on" required>
+                        </ion-input>
                     </ion-item>
+                    <p ion-text [hidden]="username.valid || submitted == false" color="danger" padding-left>
+                        Matric No is required
+                    </p>
+                    <p ion-text [hidden]="!username.errors?.minlength" color="danger" padding-left>
+                        Matric No length must be exactly 9
+                    </p>
 
                     <ion-item>
-                        <ion-label fixed>Password</ion-label>
-                        <ion-input formControlName="password" type="password"></ion-input>
+                        <ion-label stacked color="primary">Password</ion-label>
+                        <ion-input [(ngModel)]="login.password" name="password" type="password" #password="ngModel" required>
+                        </ion-input>
                     </ion-item>
+                    <p ion-text [hidden]="password.valid || submitted == false" color="danger" padding-left>
+                        Password is required
+                    </p>
                 </ion-list>
             </ion-col>
         </ion-row>
-        <ion-row>
-            <ion-col class="signup-col">
-                <button ion-button full type="submit">Login</button>
-                <button ion-button full type="button" color="secondary" (click)="goToRegisterPage()">Register</button>
+        <ion-row responsive-sm>
+            <ion-col>
+                <button ion-button (click)="onLogin(loginForm)" type="submit" block>Login</button>
+            </ion-col>
+            <ion-col>
+                <button ion-button (click)="onSignup()" color="light" block>Signup</button>
             </ion-col>
         </ion-row>
     </form>

@@ -1,31 +1,28 @@
-import {Component} from '@angular/core';
-import {NavController, NavParams, ToastController} from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ToastController, LoadingController, } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
-import {DashboardPage} from '../dashboard/dashboard';
-import {AuthService} from '../../providers/auth-service';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import 'rxjs/add/operator/catch';
-import {RegisterPage} from "../register/register";
+import { NgForm } from '@angular/forms';
+
+//Pages
+import { DashboardPage } from '../dashboard/dashboard';
+import { RegisterPage } from "../register/register";
+// Providers
+import { AuthService } from '../../providers/auth-service';
 
 @Component({
     selector: 'page-login',
     templateUrl: 'login.html',
 })
 export class Login {
-    form: FormGroup;
-    dashboard: any = DashboardPage;
-
-    public loginForm = this.fb.group({
-        matric_no: ["", Validators.required],
-        password: ["", Validators.required]
-    });
+    login: { matric_no?: string, password?: string } = {};
+    submitted = false;
 
     constructor(public navCtrl: NavController,
         public navParams: NavParams,
         public authService: AuthService,
-        public fb: FormBuilder,
         private toastCtrl: ToastController,
-        public storage: Storage) {
+        public storage: Storage,
+        public loadingCtrl: LoadingController) {
 
         if (navParams.data.message != null) {
 
@@ -37,31 +34,34 @@ export class Login {
         }
     }
 
-    doLogin(event) {
-        event.preventDefault();
-        let formData = this.loginForm.value;
+    onLogin(form: NgForm) {
+        this.submitted = true;
+        let loader = this.loadingCtrl.create({
+            content: "Please wait...",
+            duration: 3000
+        });
+        loader.present();
 
-        this.authService.login(formData).subscribe(res => {
-
-            if (res.code == 200) {
-                // this.storage.remove('user');
-                this.storage.set('user',res.data);
-
+        if (form.valid) {
+            this.authService.login(this.login).subscribe(res => {
+                this.storage.set('user', res.data);
+                loader.dismiss();
                 this.navCtrl.setRoot(DashboardPage, {
                     "message": "Hello " + res.data.name
                 });
-            } else {
 
+            }, err => {
                 this.toastCtrl.create({
-                    message: res.message,
+                    message: 'An error has occured',
                     duration: 1500,
                     position: 'bottom'
                 }).present();
-            }
-        });
+            });
+
+        }
     }
 
-    goToRegisterPage() {
+    onSignup() {
         this.navCtrl.push(RegisterPage);
     }
 }

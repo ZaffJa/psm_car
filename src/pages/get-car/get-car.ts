@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
 import { ModalChooseTimePage } from '../modal-choose-time/modal-choose-time';
-import { ModalChooseLocationPage } from '../modal-choose-location/modal-choose-location';
-import { ModalChooseCarPage } from '../modal-choose-car/modal-choose-car';
 import { ModalChooseDurationPage } from '../modal-choose-duration/modal-choose-duration';
 import { ModalChoosePickupLocationPage } from '../modal-choose-pickup-location/modal-choose-pickup-location';
 import { DashboardPage } from '../dashboard/dashboard';
@@ -20,8 +18,6 @@ export class GetCarPage {
     private _pickup_location: string;
     private _price: number;
     private _duration: any;
-    private _hour: number;
-    private _minute: number;
     private user_id: number;
 
 

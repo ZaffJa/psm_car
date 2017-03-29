@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
-import {Http, Response, Headers, RequestOptions} from '@angular/http';
-import {Observable} from 'rxjs/Rx';
+import { Http, Response } from '@angular/http';
+import { Observable } from 'rxjs/Rx';
 import 'rxjs/add/operator/map';
-import {UrlProvider} from './url-provider';
-import {UserProvider} from './user-provider';
+import { UrlProvider } from './url-provider';
+import { UserProvider } from './user-provider';
 
 
 @Injectable()
 export class TransactionProvider {
 
-    constructor(public http: Http, private userProvider: UserProvider) {}
+    constructor(public http: Http, private userProvider: UserProvider) { }
 
-    public postGetRide(pickup_time: string, destination: any, pickup_location: any, price: number, id: number): Observable < any > {
+    public postGetRide(pickup_time: string, destination: any, pickup_location: any, price: number, id: number): Observable<any> {
 
         let bodyString = JSON.stringify({
             'user_id': id,
@@ -27,7 +27,7 @@ export class TransactionProvider {
 
     }
 
-    public postGetCar(pickup_time: string, pickup_location: any, price: number, duration: string, id: number): Observable < any > {
+    public postGetCar(pickup_time: string, pickup_location: any, price: number, duration: string, id: number): Observable<any> {
 
         let bodyString = JSON.stringify({
             'user_id': id,
@@ -43,29 +43,28 @@ export class TransactionProvider {
     }
 
 
-    public getHistory(id: number): Observable < any > {
+    public getHistory(id: number): Observable<any> {
 
         return this.http.get(UrlProvider.baseUrl() + 'transactions?user_id=' + id, UrlProvider.baseHeader())
             .map((res: Response) => res.json());
     }
 
-    public getRequest(user_id:number): Observable < any > {
+    public getRequest(user_id: number): Observable<any> {
 
         return this.http.get(UrlProvider.baseUrl() + 'transactions/owner?user_id=' + user_id, UrlProvider.baseHeader())
             .map((res: Response) => res.json());
     }
 
-    public getDashboard(user_id:number): Observable < any > {
-
+    public getDashboard(user_id: number): Observable<any> {
         return this.http.get(UrlProvider.baseUrl() + 'dashboard?user_id=' + user_id, UrlProvider.baseHeader())
             .map((res: Response) => res.json());
     }
 
-    public acceptRequest(owner_id: number,transaction_id:number): Observable < any > {
+    public acceptRequest(owner_id: number, transaction_id: number): Observable<any> {
 
         let bodyString = JSON.stringify({
             'owner_id': owner_id,
-            'transaction_id': 1
+            'transaction_id': transaction_id
         });
 
         return this.http.post(UrlProvider.baseUrl() + 'transaction/accept', bodyString, UrlProvider.baseHeader())

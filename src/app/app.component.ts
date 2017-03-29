@@ -3,17 +3,19 @@ import { Nav, Platform } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { Storage } from '@ionic/storage';
 
+//Pages
 import { Login } from '../pages/login/login';
 import { GetCarPage } from '../pages/get-car/get-car';
 import { GiveCarPage } from '../pages/give-car/give-car';
 import { GetRidePage } from '../pages/get-ride/get-ride';
-import { GiveRidePage } from '../pages/give-ride/give-ride';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { HistoryPage } from '../pages/history/history';
-import {RegisterPage} from "../pages/register/register";
+import { RegisterPage } from '../pages/register/register';
+import { GoogleMapsPage } from '../pages/google-maps/google-maps';
 
 
-import {AuthService} from '../providers/auth-service';
+// Providers
+import { AuthService } from '../providers/auth-service';
 
 @Component({
     templateUrl: 'app.html',
@@ -25,87 +27,49 @@ export class MyApp {
 
     rootPage: any;
     user: any;
+    private name: string;
 
-    pages: Array < {
+    pages: Array<{
         title: string,
         component: any,
         icon: string,
 
-    } > ;
+    }>;
 
     constructor(public platform: Platform, private storage: Storage, private authService: AuthService) {
 
-        this.storage.get('user').then(user => {
+        this.rootPage = DashboardPage;
+        this.user = this.storage.get('user').then(res => { return res });
 
-            if (user != null) {
-                this.rootPage = DashboardPage;
-            } else {
-                this.rootPage = Login;
-            }
-
-        });
-
+        this.pages = [{
+            title: 'REQUEST RIDE',
+            component: GetRidePage,
+            icon: 'subway'
+        },
+        {
+            title: 'REQUEST CAR',
+            component: GetCarPage,
+            icon: 'car'
+        },
+        {
+            title: 'REQUEST DELIVERY',
+            component: GiveCarPage,
+            icon: 'list-box'
+        },
+        {
+            title: 'GOOGLE MAPS',
+            component: GoogleMapsPage,
+            icon: 'maps'
+        },
+        {
+            title: 'MY HISTORY',
+            component: HistoryPage,
+            icon: 'book'
+        }];
         this.initializeApp();
     }
 
     initializeApp() {
-        this.storage.get('user').then(user => {
-            this.user = user;
-            if (this.user != null) {
-                if (this.user.role_id == 3) {
-                    this.pages = [{
-                            title: 'HOME',
-                            component: DashboardPage,
-                            icon: 'home'
-                        },
-                        {
-                            title: 'GET RIDE',
-                            component: GetRidePage,
-                            
-                            icon: 'subway'
-                        },
-                        {
-                            title: 'RENT CAR',
-                            component: GetCarPage,
-                            icon: 'car'
-                        },
-                        {
-                            title: 'ACCEPT REQUEST',
-                            component: GiveCarPage,
-                            icon: 'list-box'
-                        },
-                        {
-                            title: 'HISTORY',
-                            component: HistoryPage,
-                            icon: 'book'
-                        },
-
-                    ];
-                } else if (this.user.role_id == 2) {
-                    this.pages = [{
-                            title: 'HOME',
-                            component: DashboardPage,
-                            icon: 'home'
-                        },
-                        {
-                            title: 'GET RIDE',
-                            component: GetRidePage,
-                            icon: 'subway'
-                        },
-                        {
-                            title: 'RENT CAR',
-                            component: GetCarPage,
-                            icon: 'car'
-                        },
-                        {
-                            title: 'HISTORY',
-                            component: HistoryPage,
-                            icon: 'book'
-                        },
-                    ];
-                }
-            }
-        });
 
         this.platform.ready().then(() => {
             // Okay, so the platform is ready and our plugins are available.
@@ -122,6 +86,11 @@ export class MyApp {
         this.nav.push(page.component);
     }
 
+    openAcceptRequest() {
+        this.nav.push(GiveCarPage);
+    }
+
+
 
     logout() {
         this.authService.logout();
@@ -130,4 +99,9 @@ export class MyApp {
             "message": "Thank you for using our system."
         })
     }
+
+    openHome() {
+        this.nav.setRoot(DashboardPage);
+    }
+
 }

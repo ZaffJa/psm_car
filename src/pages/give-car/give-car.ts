@@ -27,21 +27,18 @@ export class GiveCarPage {
                 this.user_id = user.id;
                 this.transactionProvider.getRequest(user.id).subscribe(res => {
                     this._transactions = res;
-                    console.log(res);
+                    // console.log(res);
                 });
             }
         );
 
-        
-
         Observable.interval(4000).subscribe(() => {
             this.transactionProvider.getRequest(this.user_id).subscribe(res => {
+                // console.log(res);
                 this._transactions = res;
             });
-        })
-
+        });
     }
-
 
     showConfirm(transaction_id) {
         let confirm = this.alertCtrl.create({

@@ -9,6 +9,7 @@ export class UrlProvider {
 
   public static baseUrl(): string{
     return 'http://psm.dev/api/';
+    // return 'http://psm.zaff.pro/api/';
   }
 
   public static baseHeader(): RequestOptions{

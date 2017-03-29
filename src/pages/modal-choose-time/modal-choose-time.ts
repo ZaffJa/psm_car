@@ -50,9 +50,12 @@ export class ModalChooseTimePage {
                 position: 'top'
             }).present();
 
-        } else if (this.minute == null || this.minute < 1) {
-            this.minute = 0;
         } else {
+
+            if (this.minute == null || this.minute < 1) {
+                this.minute = 0;
+
+            }
             this.viewCtrl.dismiss({
                 'hour': this.hour,
                 'minute': this.minute,

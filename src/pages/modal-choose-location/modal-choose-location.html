@@ -13,7 +13,7 @@
 </ion-header>
 
 <ion-content padding>
-    <ion-list>
+    <!--<ion-list>
         <ion-item (click)="dismiss(location)" *ngFor="let location of locations">
             <ion-avatar item-left>
                 <img src="{{ location.file_path}}" *ngIf="location.file_path">
@@ -21,6 +21,18 @@
             </ion-avatar>
             <h2>{{ location.name }}</h2>
             <p>Price UTM : {{ location.price_from_utm }} KM</p>
+        </ion-item>
+    </ion-list>-->
+    <ion-searchbar (ionInput)="getItems($event)"></ion-searchbar>
+    <ion-list>
+        <ion-item (click)="dismiss(item)" *ngFor="let item of items">
+            <ion-avatar item-left>
+                <img src="{{ item?.file_path}}" *ngIf="item?.file_path">
+                <img src="assets/img/b_no_image_icon.gif" *ngIf="item?.file_path == null">
+            </ion-avatar>
+            <h2>{{ item?.name }}</h2>
+            <p>Price UTM : {{ item?.price_from_utm }} KM</p>
+            <p>Distance UTM : {{ getPrice() }} KM</p>
         </ion-item>
     </ion-list>
 </ion-content>

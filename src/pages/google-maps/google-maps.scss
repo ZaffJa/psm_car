@@ -1,0 +1,10 @@
+page-google-maps {
+    ion-app._gmaps_cdv_ .nav-decor {
+        background-color: transparent !important;
+    }
+    home-page {
+        #map {
+            height: 100%;
+        }
+    }
+}

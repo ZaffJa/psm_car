@@ -8,25 +8,27 @@
     <ion-list *ngFor="let transaction of _transactions.data">
         <ion-item *ngIf="transaction.request_type == 1">
             <ion-thumbnail item-left>
-                <img src="../../assets/img/lunar.jpg">
+                <img src="{{ transaction?.location?.file_path }}" *ngIf="transaction.location?.file_path">
+                <img src="assets/img/b_no_image_icon.gif">
             </ion-thumbnail>
             <h2>Destination : {{ transaction.location?.name }} </h2>
-            <p>Price : RM {{ transaction?.price }}</p>
-            <p>Pickup Time : {{ transaction?.pickup_time }}</p>
+            <p>Price : {{ transaction?.price | currency:'MYR':true:'1.2-2' }}</p>
+            <p>Pickup Time : <br>{{ transaction?.pickup_time | date:'dd-MMMM-y HH:mm a' }}</p>
             <p>Pickup Location : {{ transaction?.pickup_location }}</p>
             <button ion-button clear item-right (click)="showConfirm(transaction?.id)">Accept</button>
         </ion-item>
         <ion-item *ngIf="transaction.request_type == 2">
             <ion-thumbnail item-left>
-                <img src="../../assets/img/car.jpeg">
+                <img src="assets/img/transportation.png">
             </ion-thumbnail>
-            <h2> {{ transaction.location?.name }} </h2>
+            <h2>Rent Duration : {{ transaction.duration }}</h2>
+            <p>Pickup Location : {{ transaction?.pickup_location }}</p>
+            <p>Pickup Time : {{ transaction?.pickup_time }}</p>
             <p>Price : RM {{ transaction?.price }}</p>
-            <button ion-button clear item-right (click)="showConfirm()">Accept</button>
+            <button ion-button clear item-right (click)="showConfirm(transaction?.id)">Accept</button>
         </ion-item>
     </ion-list>
     <ion-list>
-        <br><br><br>
         <h1 *ngIf="_transactions.data.length < 1">No transactions made yet</h1>
     </ion-list>
 </ion-content>

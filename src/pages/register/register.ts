@@ -1,74 +1,119 @@
-import {Component} from '@angular/core';
-import {NavController, NavParams, ToastController} from 'ionic-angular';
-import {FormBuilder, Validators} from "@angular/forms";
-import {UserProvider} from '../../providers/user-provider';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ToastController, AlertController, } from 'ionic-angular';
+import { FormBuilder, Validators, FormGroup } from "@angular/forms";
+import { UserProvider } from '../../providers/user-provider';
+import { AuthService } from '../../providers/auth-service';
+import { ValidationService } from '../../providers/validation-service';
 
 @Component({
     selector: 'page-register',
     templateUrl: 'register.html'
 })
+
 export class RegisterPage {
 
-    private isToggled:boolean = false;
+    submitted = false;
+    registerForm: FormGroup;
 
-    private registerForm = this.fb.group({
-        name: ["", Validators.required],
-        email: ["", Validators.required],
-        phone: ["", Validators.required],
-        matric_no: ["", Validators.required],
-        password: ["", Validators.required],
-        re_password: ["", Validators.required],
-        car_name: ["", Validators.required]
-    });
-
-    constructor(public navCtrl: NavController,
+    constructor(
+        public navCtrl: NavController,
         public navParams: NavParams,
         public fb: FormBuilder,
         public userProvider: UserProvider,
-        private toastCtrl: ToastController) {}
+        private toastCtrl: ToastController,
+        public alertCtrl: AlertController,
+        public authService: AuthService) {
 
-    public registerUser(event) {
-        event.preventDefault();
-        let formData = this.registerForm.value;
-        let password = this.registerForm.get('password').value;
-        let re_password = this.registerForm.get('re_password').value;
-        let matric_no = this.registerForm.get('matric_no').value;
+        this.registerForm = this.fb.group({
+            name: ["Mohd Zafri", Validators.compose(
+                [Validators.required,
+                Validators.minLength(5),
+                Validators.pattern('[a-zA-Z ]*') // Accepts alphabets and spaces only
+                ])],
+            phone: ["0174403225", Validators.compose([
+                Validators.required,
+                Validators.minLength(10),
+                ValidationService.phoneValidator,
+                Validators.maxLength(11)
+            ])],
+            matric_no: ["A13CS0059", Validators.compose(
+                [Validators.required,
+                Validators.pattern('^[a-zA-Z][1-9]{2}[a-zA-Z]{2}[0-9]{4}$') // Only accepts string like A12CS0011
+                ])],
+            password: ["123", Validators.required],
+            re_password: ["123", Validators.compose([
+                Validators.required,
+            ])],
+            car_name: ["", Validators.pattern('[a-zA-Z ]*')],
+            isToggled: [false]
+        }, { validator: this.passwordsShouldMatch });
+    }
 
-        if (password !== re_password) {
-            this.toastCtrl.create({
-                message: "Password mismatch",
-                duration: 1500,
-                position: 'bottom'
-            }).present();
+    public passwordsShouldMatch(group: FormGroup) {
 
-        } else if (matric_no == "" || matric_no == null){
-          
-            this.toastCtrl.create({
-                message: "Matric Number is required",
-                duration: 1500,
-                position: 'bottom'
-            }).present();
+        var newPassword = group.controls['password'].value;
+        var confirmPassword = group.controls['re_password'].value;
 
-        } else {
-            this.userProvider.register(formData).subscribe(res => {
-                if (res.code == 200) {
-                    this.toastCtrl.create({
-                        message: res.message,
-                        duration: 1500,
-                        position: 'bottom'
-                    }).present();
+        // If either of these fields is empty, the validation 
+        // will be bypassed. We expect the required validator to be 
+        // applied first. 
 
-                    this.navCtrl.pop();
+        if (newPassword == '' || confirmPassword == '')
+            return null;
 
-                } else {
-                    console.log(res);
-                    this.toastCtrl.create({
-                        message: res.message,
-                        duration: 1500,
-                        position: 'bottom'
-                    }).present();
-                }
-            });
-        }
+        if (newPassword != confirmPassword)
+            return { passwordsShouldMatch: true };
+        return null;
+    }
+
+
+    public onRegister(formData: FormGroup) {
+
+        this.authService.checkMatricNumber(formData.value.matric_no).subscribe(res => {
+
+            if (res) {
+                console.log('Matric');
+                formData.controls['matric_no'].setErrors({ 'alreadyExist': true });
+            } else {
+                let confirm = this.alertCtrl.create({
+                    title: 'Confirmation',
+                    message: 'By clicking YES you are agreeing to the Terms and Conditions',
+                    buttons: [{
+                        text: 'No',
+                        handler: () => {
+                            console.log('Disagree clicked');
+                        }
+                    },
+                    {
+                        text: 'Yes',
+                        handler: () => {
+                            console.log("yes");
+                            this.userProvider.register(formData.value).subscribe(res => {
+                                if (res.code == 200) {
+                                    this.toastCtrl.create({
+                                        message: res.message,
+                                        duration: 1500,
+                                        position: 'bottom'
+                                    }).present();
+
+                                    this.navCtrl.pop();
+
+                                } else {
+                                    console.log(res);
+                                    this.toastCtrl.create({
+                                        message: res.message,
+                                        duration: 1500,
+                                        position: 'bottom'
+                                    }).present();
+                                }
+                            });
+                        }
+                    }
+                    ]
+                });
+                confirm.present();
+            }
+
+        })
     }
 }

@@ -11,20 +11,25 @@
                     <!--<ion-avatar item-left>
                         <img src="../assets/img/lunar.jpg">
                     </ion-avatar>-->
-                    <h2>MOHD ZAFRI</h2>
+                    <!--<h2 *ngif="name != null">Name :</h2>-->
                     <!--<h3>Don't Know What To Do!</h3>-->
                 </ion-item>
             </ion-list>
-            <div *ngIf="user">
-                <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" class="menu">
+            <button menuClose ion-item (click)="openHome()" class="menu">
+                    <ion-icon name="home"></ion-icon>
+                    HOME
+                </button>
+            <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)" class="menu">
                     <ion-icon name="{{ p.icon }}"></ion-icon>
                     {{p.title}}
                 </button>
-            </div>
-
+            <button menuClose ion-item (click)="openAcceptRequest()" class="menu">
+                    <ion-icon name="home"></ion-icon>
+                    ACCEPT REQUEST
+                </button>
             <button menuClose ion-item (click)="logout()" class="menu">
 
-              <ion-icon name="exit"></ion-icon>
+            <ion-icon name="exit"></ion-icon>
               LOGOUT
             </button>
         </ion-list>

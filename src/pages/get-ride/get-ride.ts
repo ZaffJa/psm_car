@@ -1,18 +1,18 @@
-import {Component} from '@angular/core';
-import {NavController, NavParams, ModalController, ToastController} from 'ionic-angular';
+import { Component } from '@angular/core';
+import { NavController, NavParams, ModalController, ToastController } from 'ionic-angular';
+import { Geolocation } from '@ionic-native/geolocation';
 
 // Modals
-import {ModalChooseTimePage} from '../modal-choose-time/modal-choose-time';
-import {ModalChooseLocationPage} from '../modal-choose-location/modal-choose-location';
-import {ModalChooseCarPage} from '../modal-choose-car/modal-choose-car';
-import {ModalChoosePickupLocationPage} from '../modal-choose-pickup-location/modal-choose-pickup-location';
+import { ModalChooseTimePage } from '../modal-choose-time/modal-choose-time';
+import { ModalChooseLocationPage } from '../modal-choose-location/modal-choose-location';
+import { ModalChoosePickupLocationPage } from '../modal-choose-pickup-location/modal-choose-pickup-location';
 import { Storage } from '@ionic/storage';
 
 // Pages
-import {DashboardPage} from '../dashboard/dashboard';
+import { DashboardPage } from '../dashboard/dashboard';
 
 // Providers
-import {TransactionProvider} from '../../providers/transaction-provider';
+import { TransactionProvider } from '../../providers/transaction-provider';
 import { UserProvider } from '../../providers/user-provider';
 @Component({
     selector: 'page-get-ride',
@@ -27,6 +27,9 @@ export class GetRidePage {
     private _pickup_location: string;
     private _price: number;
     private user_id: number;
+    private tzoffset: any;
+    private localISOTime: any;
+    private currentLocation: any;
 
 
     constructor(public navCtrl: NavController,
@@ -35,9 +38,35 @@ export class GetRidePage {
         private toastCtrl: ToastController,
         private transactionProvider: TransactionProvider,
         public storage: Storage,
-        private userProvider: UserProvider) {
+        private userProvider: UserProvider,
+        private geolocation: Geolocation) {
+
+        this.tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+        this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
 
         this.userProvider.getId().then(id => this.user_id = id);
+
+        this.geolocation.getCurrentPosition().then((resp) => {
+
+            this.currentLocation = resp.coords;
+
+            let dummyLocation = {
+                lng: 103.629184,
+                lat: 1.542449
+            };
+
+            let dummyDestination = {
+                lng: resp.coords.longitude,
+                lat: resp.coords.latitude
+            }
+
+            console.log(this.getDistanceBetweenPoints(dummyLocation, dummyDestination, 'km'))
+            console.log(resp);
+            // resp.coords.latitude
+            // resp.coords.longitude
+        }).catch((error) => {
+            console.log('Error getting location', error);
+        });
     }
 
 
@@ -61,7 +90,6 @@ export class GetRidePage {
                 this._location = data.name;
                 this._price = data.price_from_utm;
             }
-
         });
         modal.present();
     }
@@ -80,9 +108,13 @@ export class GetRidePage {
 
     submitGetRide() {
 
+        this.localISOTime = this.localISOTime.replace("T", " ");
+        this.localISOTime = this.localISOTime.substring(0, this.localISOTime.indexOf("."));
+
+
         let checkAllSelected = false;
 
-        if (this._pickup_time == null || this._location == null || this._pickup_location == null) {
+        if (this._location == null || this._pickup_location == null) {
             checkAllSelected = true;
         }
 
@@ -94,13 +126,9 @@ export class GetRidePage {
             }).present()
 
         } else {
-            console.log(this._pickup_time +
-                this._location_id +
-                this._pickup_location +
-                this._price +
-                this.user_id);
+
             this.transactionProvider.postGetRide(
-                this._pickup_time,
+                this.localISOTime,
                 this._location_id,
                 this._pickup_location,
                 this._price,
@@ -136,4 +164,39 @@ export class GetRidePage {
             });
         }
     }
+
+
+    toRad(x) {
+        return x * Math.PI / 180;
+    }
+
+    getDistanceBetweenPoints(start, end, units) {
+
+        let earthRadius = {
+            miles: 3958.8,
+            km: 6371
+        };
+
+        let R = earthRadius[units || 'miles'];
+        let lat1 = start.lat;
+        let lon1 = start.lng;
+        let lat2 = end.lat;
+        let lon2 = end.lng;
+
+        let dLat = this.toRad((lat2 - lat1));
+        let dLon = this.toRad((lon2 - lon1));
+        let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(this.toRad(lat1)) * Math.cos(this.toRad(lat2)) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        let d = R * c;
+
+        return d;
+
+    }
+
+
+
+
 }
