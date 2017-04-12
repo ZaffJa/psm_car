@@ -39,7 +39,7 @@ export class MyApp {
 
         this.user = this.storage.get('user').then(res => {
             if (res != null) {
-                this.rootPage = DashboardPage;
+                this.rootPage = GoogleMapsPage;
 
             } else {
                 this.rootPage = Login;

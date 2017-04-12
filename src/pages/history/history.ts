@@ -3,8 +3,11 @@ import { NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 // Providers
-import {TransactionProvider} from '../../providers/transaction-provider';
+import { TransactionProvider } from '../../providers/transaction-provider';
 import { UserProvider } from '../../providers/user-provider';
+
+// Pages
+import { ViewAcceptedRequestPage } from '../view-accepted-request/view-accepted-request';
 
 @Component({
     selector: 'page-history',
@@ -27,6 +30,12 @@ export class HistoryPage {
                     this._transactions = res;
                     console.log(this._transactions);
                 });
+        });
+    }
+
+    viewRequest(owner_id: number) {
+        this.navCtrl.push(ViewAcceptedRequestPage, {
+            owner_id: owner_id
         });
     }
 }

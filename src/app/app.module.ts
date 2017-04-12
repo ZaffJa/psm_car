@@ -22,6 +22,7 @@ import { RegisterPage } from '../pages/register/register';
 import { ControlMessagesPage } from '../pages/control-messages/control-messages';
 import { HistoryPage } from '../pages/history/history';
 import { GoogleMapsPage } from '../pages/google-maps/google-maps';
+import { ViewAcceptedRequestPage } from '../pages/view-accepted-request/view-accepted-request';
 
 
 // Providers
@@ -40,7 +41,7 @@ import { ElasticModule } from 'angular2-elastic';
         Login, MyApp, GetCarPage, GiveCarPage, GetRidePage,
         GiveRidePage, DashboardPage, ModalChooseTimePage, ModalChooseLocationPage,
         ModalChooseCarPage, RegisterPage, ModalChoosePickupLocationPage, ModalChooseDurationPage,
-        HistoryPage, ControlMessagesPage, GoogleMapsPage
+        HistoryPage, ControlMessagesPage, GoogleMapsPage, ViewAcceptedRequestPage
 
     ],
     imports: [
@@ -54,7 +55,7 @@ import { ElasticModule } from 'angular2-elastic';
         GetRidePage, GiveRidePage, DashboardPage, ModalChooseTimePage,
         ModalChooseLocationPage, ModalChooseCarPage, RegisterPage,
         ModalChoosePickupLocationPage, ModalChooseDurationPage,
-        HistoryPage, ControlMessagesPage, GoogleMapsPage
+        HistoryPage, ControlMessagesPage, GoogleMapsPage, ViewAcceptedRequestPage
     ],
     providers: [AuthService, LocationProvider, UrlProvider, TransactionProvider, UserProvider, ValidationService,
         Geolocation, {

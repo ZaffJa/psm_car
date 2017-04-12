@@ -11,7 +11,7 @@
         "css": ["css", "scss"],
         "html": ["htm", "html"],
         "ts": {
-            "indent_size": 2,
+            "indent_size": 4,
             "indent_char": " ",
             "type": ["typescript"]
         }

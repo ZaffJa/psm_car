@@ -6,7 +6,7 @@
 </ion-header>
 <ion-content *ngIf="_transactions?.data" padding>
     <ion-list *ngFor="let transaction of _transactions.data">
-        <ion-item *ngIf="transaction.request_type == 1">
+        <ion-item *ngIf="transaction.request_type == 1" (click)="viewRequest(transaction.id)">
             <ion-thumbnail item-left>
                 <img src="{{ transaction.location?.file_path}}" *ngIf="transaction.location?.file_path">
                 <img src="assets/img/b_no_image_icon.gif" *ngIf="transaction.location?.file_path == null">
@@ -14,16 +14,16 @@
             <h2>Destination : {{ transaction.location?.name }} </h2>
             <p>Pickup Location : {{ transaction?.pickup_location }}</p>
             <p>Pickup Time : {{ transaction?.pickup_time }}</p>
-            <p>Price : RM {{ transaction?.price }}</p>            
+            <p>Price : RM {{ transaction?.price }}</p>
             <button *ngIf="transaction.owner != null" ion-button clear item-right>View</button>
         </ion-item>
-        <ion-item *ngIf="transaction.request_type == 2">
+        <ion-item *ngIf="transaction.request_type == 2" (click)="viewRequest(transaction.id)">
             <ion-thumbnail item-left>
                 <img src="assets/img/transportation.png">
             </ion-thumbnail>
             <h2>Rent Duration : {{ transaction.duration }}</h2>
-            <p>Pickup Location : {{ transaction?.pickup_location }}</p>            
-            <p>Pickup Time : {{ transaction?.pickup_time }}</p>            
+            <p>Pickup Location : {{ transaction?.pickup_location }}</p>
+            <p>Pickup Time : {{ transaction?.pickup_time }}</p>
             <p>Price : RM {{ transaction?.price }}</p>
             <button *ngIf="transaction.owner != null" ion-button clear item-right>View</button>
         </ion-item>
