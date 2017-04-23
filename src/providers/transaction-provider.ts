@@ -56,6 +56,31 @@ export class TransactionProvider {
             .map((res: Response) => res.json());
     }
 
+    public userCancelRequest(transaction: number, user_id: number): Observable<any> {
+
+        let query = 'transaction_id=' + transaction + '&user_id=' + user_id;
+
+        return this.http.get(UrlProvider.baseUrl() + 'transaction/user/cancel?' + query, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+    public ownerCancelRequest(transaction: number): Observable<any> {
+
+        return this.http.get(UrlProvider.baseUrl() + 'transaction/owner/cancel?transaction_id=' + transaction, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+    public viewUpcomingRequest(transaction: string): Observable<any> {
+
+        return this.http.get(UrlProvider.baseUrl() + 'transactions/upcoming?' + transaction, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+    public doneRequest(transaction: string): Observable<any> {
+
+        return this.http.get(UrlProvider.baseUrl() + 'transaction/done?transaction_id=' + transaction, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
     public getDashboard(user_id: number): Observable<any> {
         return this.http.get(UrlProvider.baseUrl() + 'dashboard?user_id=' + user_id, UrlProvider.baseHeader())
             .map((res: Response) => res.json());

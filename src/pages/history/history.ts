@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, ModalController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 // Providers
@@ -14,14 +14,16 @@ import { ViewAcceptedRequestPage } from '../view-accepted-request/view-accepted-
     templateUrl: 'history.html'
 })
 export class HistoryPage {
-
     private _transactions: any;
 
     constructor(public navCtrl: NavController,
         public navParams: NavParams,
         public transactionProvider: TransactionProvider,
         public userProvider: UserProvider,
-        public storage: Storage) {
+        public storage: Storage,
+        public modalCtrl: ModalController) {
+
+        console.log('hello');
 
         this.storage.get('user').then(user => {
 
@@ -33,9 +35,12 @@ export class HistoryPage {
         });
     }
 
-    viewRequest(owner_id: number) {
-        this.navCtrl.push(ViewAcceptedRequestPage, {
-            owner_id: owner_id
-        });
+    viewRequest(transaction) {
+        console.log(transaction);
+
+        let modal = this.modalCtrl.create(ViewAcceptedRequestPage, { transaction });
+
+        modal.present();
+        // this.navCtrl.push(ViewAcceptedRequestPage, { transaction });
     }
 }

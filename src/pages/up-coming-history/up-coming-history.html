@@ -1,19 +1,7 @@
 <ion-content *ngIf="_transactions?.data" padding>
-    <br>
     <ion-list *ngFor="let transaction of _transactions.data">
         <div *ngIf="transaction.request_type == 1" (click)="viewRequest(transaction)">
-            <ion-item *ngIf="transaction.status == 2" color="secondary">
-                <ion-thumbnail item-left>
-                    <img src="{{ transaction.location?.file_path}}" *ngIf="transaction.location?.file_path">
-                    <img src="assets/img/b_no_image_icon.gif" *ngIf="transaction.location?.file_path == null">
-                </ion-thumbnail>
-                <h2>Destination : {{ transaction.location?.name }} </h2>
-                <p>Pickup Location : {{ transaction?.pickup_location }}</p>
-                <p>Pickup Time : {{ transaction?.pickup_time }}</p>
-                <p>Price : RM {{ transaction?.price }}</p>
-
-            </ion-item>
-            <ion-item *ngIf="transaction.status == 3" color="danger">
+            <ion-item>
                 <ion-thumbnail item-left>
                     <img src="{{ transaction.location?.file_path}}" *ngIf="transaction.location?.file_path">
                     <img src="assets/img/b_no_image_icon.gif" *ngIf="transaction.location?.file_path == null">
@@ -26,17 +14,7 @@
             </ion-item>
         </div>
         <div *ngIf="transaction.request_type == 2" (click)="viewRequest(transaction)">
-
-            <ion-item *ngIf="transaction.status == 2" color="secondary">
-                <ion-thumbnail item-left>
-                    <img src="assets/img/transportation.png">
-                </ion-thumbnail>
-                <h2>Rent Duration : {{ transaction.duration }}</h2>
-                <p>Pickup Location : {{ transaction?.pickup_location }}</p>
-                <p>Pickup Time : {{ transaction?.pickup_time }}</p>
-                <p>Price : RM {{ transaction?.price }}</p>
-            </ion-item>
-            <ion-item *ngIf="transaction.status == 3" color="danger">
+            <ion-item>
                 <ion-thumbnail item-left>
                     <img src="assets/img/transportation.png">
                 </ion-thumbnail>
@@ -48,7 +26,6 @@
         </div>
     </ion-list>
     <ion-list>
-        <br><br><br>
         <h1 *ngIf="_transactions.data.length < 1">No transactions made yet</h1>
     </ion-list>
 </ion-content>

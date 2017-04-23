@@ -11,8 +11,8 @@
                     <!--<ion-avatar item-left>
                         <img src="../assets/img/lunar.jpg">
                     </ion-avatar>-->
-                    <!--<h2 *ngif="name != null">Name :</h2>-->
-                    <!--<h3>Don't Know What To Do!</h3>-->
+                    <h2>Name : {{ user?.name }}</h2>
+                    <h3>Phone : {{ user?.phone }}</h3>
                 </ion-item>
             </ion-list>
             <button menuClose ion-item (click)="openHome()" class="menu">
@@ -23,10 +23,11 @@
                     <ion-icon name="{{ p.icon }}"></ion-icon>
                     {{p.title}}
                 </button>
-            <button menuClose ion-item (click)="openAcceptRequest()" class="menu">
-                    <ion-icon name="home"></ion-icon>
+
+            <button *ngIf="user?.role_id == 3" menuClose ion-item (click)="openAcceptRequest()" class="menu">
+                    <ion-icon name="list-box"></ion-icon>
                     ACCEPT REQUEST
-                </button>
+            </button>
             <button menuClose ion-item (click)="logout()" class="menu">
 
             <ion-icon name="exit"></ion-icon>

@@ -20,6 +20,13 @@ export class UserProvider {
     }
 
 
+    public update(body): Observable<any> {
+        let bodyString = JSON.stringify(body); // Stringify payload
+        return this.http.post(UrlProvider.baseUrl() + 'update', bodyString, UrlProvider.baseHeader())
+            .map((res: Response) => res.json());
+    }
+
+
     getId(): Promise<number> {
         return this.storage.get('user').then((user) => {
             return user.id;

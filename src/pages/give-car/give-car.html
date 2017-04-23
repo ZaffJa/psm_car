@@ -6,7 +6,7 @@
 </ion-header>
 <ion-content *ngIf="_transactions?.data" padding>
     <ion-list *ngFor="let transaction of _transactions.data">
-        <ion-item *ngIf="transaction.request_type == 1">
+        <ion-item *ngIf="transaction.request_type == 1" (click)="showConfirm(transaction?.id)">
             <ion-thumbnail item-left>
                 <img src="{{ transaction?.location?.file_path }}" *ngIf="transaction.location?.file_path">
                 <img src="assets/img/b_no_image_icon.gif">
@@ -15,9 +15,8 @@
             <p>Price : {{ transaction?.price | currency:'MYR':true:'1.2-2' }}</p>
             <p>Pickup Time : <br>{{ transaction?.pickup_time | date:'dd-MMMM-y HH:mm a' }}</p>
             <p>Pickup Location : {{ transaction?.pickup_location }}</p>
-            <button ion-button clear item-right (click)="showConfirm(transaction?.id)">Accept</button>
         </ion-item>
-        <ion-item *ngIf="transaction.request_type == 2">
+        <ion-item *ngIf="transaction.request_type == 2" (click)="showConfirm(transaction?.id)">
             <ion-thumbnail item-left>
                 <img src="assets/img/transportation.png">
             </ion-thumbnail>
@@ -25,10 +24,12 @@
             <p>Pickup Location : {{ transaction?.pickup_location }}</p>
             <p>Pickup Time : {{ transaction?.pickup_time }}</p>
             <p>Price : RM {{ transaction?.price }}</p>
-            <button ion-button clear item-right (click)="showConfirm(transaction?.id)">Accept</button>
         </ion-item>
     </ion-list>
     <ion-list>
         <h1 *ngIf="_transactions.data.length < 1">No transactions made yet</h1>
     </ion-list>
+</ion-content>
+<ion-content *ngIf="_transactions == null" padding>
+    <h1>No request at the moment</h1>
 </ion-content>

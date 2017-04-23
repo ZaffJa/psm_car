@@ -11,7 +11,9 @@ import { GetRidePage } from '../pages/get-ride/get-ride';
 import { DashboardPage } from '../pages/dashboard/dashboard';
 import { HistoryPage } from '../pages/history/history';
 import { RegisterPage } from '../pages/register/register';
+import { SettingPage } from '../pages/setting/setting';
 import { GoogleMapsPage } from '../pages/google-maps/google-maps';
+import { HistoryTabPage } from '../pages/history-tab/history-tab';
 
 
 // Providers
@@ -32,14 +34,17 @@ export class MyApp {
         title: string,
         component: any,
         icon: string,
+        index?: number
 
     }>;
 
     constructor(public platform: Platform, private storage: Storage, private authService: AuthService) {
 
-        this.user = this.storage.get('user').then(res => {
+        this.storage.get('user').then(res => {
             if (res != null) {
-                this.rootPage = GoogleMapsPage;
+                this.user = res;
+
+                this.rootPage = DashboardPage;
 
             } else {
                 this.rootPage = Login;
@@ -57,14 +62,14 @@ export class MyApp {
             icon: 'car'
         },
         {
-            title: 'REQUEST DELIVERY',
-            component: GiveCarPage,
-            icon: 'list-box'
+            title: 'MY HISTORY',
+            component: HistoryTabPage,
+            icon: 'book'
         },
         {
-            title: 'MY HISTORY',
-            component: HistoryPage,
-            icon: 'book'
+            title: 'PROFILE',
+            component: SettingPage,
+            icon: 'contact'
         }];
         this.initializeApp();
     }
@@ -81,8 +86,11 @@ export class MyApp {
     }
 
     openPage(page) {
-        // Reset the content nav to have just this page
-        // we wouldn't want the back button to show in this scenario
+        // If page contain index which is for tab navigation in HistoryTabPage
+        if (page.index) {
+            this.nav.push(page.component, { index: page.index });
+        }
+
         this.nav.push(page.component);
     }
 

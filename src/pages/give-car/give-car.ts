@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { NavController, NavParams, AlertController, ToastController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
-import {TransactionProvider} from '../../providers/transaction-provider';
+import { TransactionProvider } from '../../providers/transaction-provider';
 
-import {Observable} from 'rxjs/Rx';
+import { Observable } from 'rxjs/Rx';
 
 
 @Component({
@@ -15,6 +15,7 @@ export class GiveCarPage {
 
     private _transactions: any;
     private user_id: number;
+    private observable: any;
 
     constructor(public navCtrl: NavController,
         public navParams: NavParams,
@@ -24,20 +25,24 @@ export class GiveCarPage {
         public toastCtrl: ToastController) {
 
         this.storage.get('user').then(user => {
-                this.user_id = user.id;
-                this.transactionProvider.getRequest(user.id).subscribe(res => {
-                    this._transactions = res;
-                    // console.log(res);
-                });
-            }
+            this.user_id = user.id;
+            this.transactionProvider.getRequest(user.id).subscribe(res => {
+                this._transactions = res;
+                // console.log(res);
+            });
+        }
         );
 
-        Observable.interval(4000).subscribe(() => {
+        this.observable = Observable.interval(4000).subscribe(() => {
             this.transactionProvider.getRequest(this.user_id).subscribe(res => {
-                // console.log(res);
                 this._transactions = res;
+                console.log(this._transactions);
             });
         });
+    }
+
+    ionViewDidLeave() {
+        this.observable.unsubscribe();
     }
 
     showConfirm(transaction_id) {
@@ -45,41 +50,41 @@ export class GiveCarPage {
             title: 'Confirmation',
             message: 'Are you sure you want to accept this request?',
             buttons: [{
-                    text: 'No',
-                    handler: () => {
-                        console.log('Disagree clicked');
-                    }
-                },
-                {
-                    text: 'Yes',
-                    handler: () => {
-                        this.transactionProvider.acceptRequest(this.user_id, transaction_id).subscribe(res => {
-                            if (res.code != 200) {
-
-                                let toast = this.toastCtrl.create({
-                                    message: 'Error in processing your request',
-                                    duration: 1500,
-                                    position: 'top'
-                                });
-
-                                toast.present();
-
-                            } else {
-                                let toast = this.toastCtrl.create({
-                                    message: 'Your request has been sent',
-                                    duration: 1500,
-                                    position: 'top'
-                                });
-
-                                toast.onDidDismiss(() => {
-                                    this.navCtrl.pop();
-                                });
-
-                                toast.present();
-                            }
-                        })
-                    }
+                text: 'No',
+                handler: () => {
+                    console.log('Disagree clicked');
                 }
+            },
+            {
+                text: 'Yes',
+                handler: () => {
+                    this.transactionProvider.acceptRequest(this.user_id, transaction_id).subscribe(res => {
+                        if (res.code != 200) {
+
+                            let toast = this.toastCtrl.create({
+                                message: 'Error in processing your request',
+                                duration: 1500,
+                                position: 'top'
+                            });
+
+                            toast.present();
+
+                        } else {
+                            let toast = this.toastCtrl.create({
+                                message: 'Your request has been sent',
+                                duration: 1500,
+                                position: 'top'
+                            });
+
+                            toast.onDidDismiss(() => {
+                                this.navCtrl.pop();
+                            });
+
+                            toast.present();
+                        }
+                    })
+                }
+            }
             ]
         });
         confirm.present();

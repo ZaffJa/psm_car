@@ -51,7 +51,7 @@ export class ValidationService {
 
   static phoneValidator(control) {
     // Only digits
-    if (control.value.match(/^[0-9]+$/)) {
+    if (control.value.match(/^[0-9]{10,11}$/)) {
       return null;
     } else {
       return { 'invalidPhoneNumber': true };
