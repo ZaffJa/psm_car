@@ -1,7 +1,11 @@
 <ion-header>
     <ion-navbar>
-        <!--<ion-icon name="menu" menuToggle padding></ion-icon>-->
-        <ion-title>RENT A CAR</ion-title>
+        <button ion-button menuToggle>
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            Get Car
+        </ion-title>
     </ion-navbar>
 </ion-header>
 <ion-content padding>
@@ -84,12 +88,13 @@
             Price: {{ _price | currency:'MYR':true:'1.2-2' }}
         </ion-col>
     </ion-row>
+    <button ion-button full class="input" (click)="submitGetRide()">SUBMIT</button>
 
-    <ion-footer>
+    <!--<ion-footer>
         <ion-toolbar>
             <ion-title>
                 <button ion-button full class="input" (click)="submitGetCar()">SUBMIT</button>
             </ion-title>
         </ion-toolbar>
-    </ion-footer>
+    </ion-footer>-->
 </ion-content>
