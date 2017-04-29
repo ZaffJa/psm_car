@@ -27,6 +27,10 @@
                         <ion-input formControlName="matric_no" type="text" placeholder="Your matric no"></ion-input>
                     </ion-item>
                     <control-messages [control]="registerForm.controls.matric_no"></control-messages>
+                    <ion-item>
+                        <ion-label color="primary" fixed>Email Address</ion-label>
+                        <ion-input formControlName="email" type="text" placeholder="Your working email address"></ion-input>
+                    </ion-item>
                     <p ion-text *ngIf="registerForm.get('matric_no').errors?.alreadyExist" color="danger" padding-left>
                         {{ registerForm.get('matric_no').value }} has already been registered to the system
                     </p>

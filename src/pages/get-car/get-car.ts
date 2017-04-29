@@ -8,9 +8,9 @@ import { Geolocation } from '@ionic-native/geolocation';
 import { DashboardPage } from '../dashboard/dashboard';
 
 // Modals
-import { ModalChooseTimePage } from '../modal-choose-time/modal-choose-time';
-import { ModalChooseDurationPage } from '../modal-choose-duration/modal-choose-duration';
-import { ModalChoosePickupLocationPage } from '../modal-choose-pickup-location/modal-choose-pickup-location';
+// import { ModalChooseTimePage } from '../modal-choose-time/modal-choose-time';
+// import { ModalChooseDurationPage } from '../modal-choose-duration/modal-choose-duration';
+// import { ModalChoosePickupLocationPage } from '../modal-choose-pickup-location/modal-choose-pickup-location';
 
 // Providers
 import { TransactionProvider } from '../../providers/transaction-provider';
@@ -21,15 +21,17 @@ import { UserProvider } from '../../providers/user-provider';
 })
 export class GetCarPage {
 
-    private _pickup_time: string;
+    // private _pickup_time: string;
     private _pickup_location: string;
+    private _pickup_lat: string;
+    private _pickup_lng: string;
     private _price: number;
     private _seater: number;
     private _duration: string;
     private user_id: number;
     private tzoffset: any;
     private localISOTime: any;
-    private currentLocation: any;
+    // private currentLocation: any;
     private userCoordinate: any;
 
 
@@ -47,7 +49,10 @@ export class GetCarPage {
         this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
         this._seater = 5;
         this._price = 0;
-        this.userProvider.getId().then(id => this.user_id = id);
+        this.userProvider.getId().then(id => {
+            this.user_id = id;
+            this.getLatLng();
+        });
     }
 
     getLatLng() {
@@ -64,6 +69,9 @@ export class GetCarPage {
                         if (res.json().status == "OK") {
                             this._pickup_location = res.json().results[0].formatted_address;
                             this.userCoordinate = res.json().results[0].geometry.location;
+                            this._pickup_lat = this.userCoordinate.lat;
+                            this._pickup_lng = this.userCoordinate.lng;
+
                         } else {
                             this.toastCtrl.create({
                                 message: 'Error! Please insert correct address',
@@ -84,6 +92,8 @@ export class GetCarPage {
                     if (res.json().status == "OK") {
                         this._pickup_location = res.json().results[0].formatted_address;
                         this.userCoordinate = res.json().results[0].geometry.location;
+                        this._pickup_lat = this.userCoordinate.lat;
+                        this._pickup_lng = this.userCoordinate.lng;
                     } else {
                         this.toastCtrl.create({
                             message: 'Error! Please insert correct address',
@@ -133,13 +143,18 @@ export class GetCarPage {
 
         } else {
 
+            console.log('lat:' + this._pickup_lat);
+            console.log('lng:' + this._pickup_lng);
+
             this.transactionProvider.postGetCar(
                 this.localISOTime,
                 this._seater,
                 this._pickup_location,
                 this._price,
                 this._duration,
-                this.user_id
+                this.user_id,
+                this._pickup_lat,
+                this._pickup_lng
 
             ).subscribe(res => {
 
@@ -152,6 +167,8 @@ export class GetCarPage {
                     });
 
                     toast.present();
+                    console.log(res);
+
 
                 } else {
                     let toast = this.toastCtrl.create({
@@ -159,6 +176,8 @@ export class GetCarPage {
                         duration: 1500,
                         position: 'top'
                     });
+
+                    console.log(res);
 
                     toast.onDidDismiss(() => {
                         this.navCtrl.setRoot(DashboardPage);

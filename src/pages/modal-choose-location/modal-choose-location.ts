@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController, NavParams, ViewController, LoadingController } from 'ionic-angular';
 import { LocationProvider } from '../../providers/location-provider';
 
@@ -15,7 +15,7 @@ export class ModalChooseLocationPage {
   private items: any;
   static allItems: any;
   private currentLocation: any;
-  private loader: any;
+  // private loader: any;
 
 
   constructor(public navCtrl: NavController,

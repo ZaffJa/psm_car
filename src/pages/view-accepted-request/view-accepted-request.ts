@@ -39,8 +39,9 @@ export class ViewAcceptedRequestPage {
     window.open("tel:" + phone);
   }
 
-  public openMap(map) {
-    window.open("geo:?q=" + location);
+  public openMap(lat, lng, name) {
+    // window.open("geo:?q=" + map,"_system");
+    window.open('geo:?q=' + lat + ',' + lng + '(' + name + ')', '_system');
   }
 
   public userCancelRequest(transaction) {

@@ -20,8 +20,13 @@
                     </ion-item>
                     <br>
                     <ion-title>
-                        Change Phone No.
+                        Change User Information
                     </ion-title>
+                    <ion-item>
+                        <ion-label color="primary" stacked>Email</ion-label>
+                        <ion-input formControlName="email" type="email" placeholder="Your current email address"></ion-input>
+                    </ion-item>
+                    <control-messages [control]="registerForm.controls.phone"></control-messages>
                     <ion-item>
                         <ion-label color="primary" stacked>Phone</ion-label>
                         <ion-input formControlName="phone" type="text" placeholder="Your phone"></ion-input>

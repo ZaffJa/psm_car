@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ModalController } from 'ionic-angular';
+import { NavController, NavParams, ModalController, LoadingController } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 
 
@@ -21,13 +21,22 @@ export class UpComingHistoryPage {
     public navParams: NavParams,
     public storage: Storage,
     public transactionProvider: TransactionProvider,
-    public modalCtrl: ModalController) {
+    public modalCtrl: ModalController,
+    public loadingCtrl: LoadingController) {
+
+    let loader = this.loadingCtrl.create({
+      content: "Loading your history",
+      duration: 3000
+    });
+    loader.present();
+
     this.storage.get('user').then(user => {
 
       this.transactionProvider.viewUpcomingRequest("user_id=" + user.id)
         .subscribe(res => {
           this._transactions = res;
           console.log(this._transactions);
+          loader.dismiss();
         });
     });
   }

@@ -50,7 +50,7 @@
             <ion-col col-12>
                 <ion-item>
                     <ion-label stacked style="font-size: large" color="primary">Choose Pickup Location</ion-label>
-                    <ion-input [(ngModel)]="_pickup_location" name="_pickup_location" placeholder="Eg:- L01 KTHO" type="text" required>
+                    <ion-input (focusout)="getLatLng()" [(ngModel)]="_pickup_location" name="_pickup_location" placeholder="Click the locate button to get your current location" type="text" required>
                     </ion-input>
                     <button ion-button item-right (click)="getLatLng()">
                     <ion-icon name="locate"></ion-icon>

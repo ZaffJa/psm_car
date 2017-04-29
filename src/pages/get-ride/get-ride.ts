@@ -27,12 +27,14 @@ export class GetRidePage {
     private _location_id: number;
     private _pickup_time: string;
     // private _car: string = "Choose Car (Optional)";
+    private _pickup_lat: string;
+    private _pickup_lng: string;
     private _pickup_location: string;
     private _price: number;
     private user_id: number;
     private tzoffset: any;
     private localISOTime: any;
-    private currentLocation: any;
+    // private currentLocation: any;
     private userCoordinate: any;
 
 
@@ -49,7 +51,11 @@ export class GetRidePage {
         this.tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
         this.localISOTime = (new Date(Date.now() - this.tzoffset)).toISOString().slice(0, -1);
 
-        this.userProvider.getId().then(id => this.user_id = id);
+        this.userProvider.getId().then(id => {
+            this.user_id = id;
+            this.getLatLng();
+        });
+
     }
 
     getLatLng() {
@@ -66,6 +72,8 @@ export class GetRidePage {
                         if (res.json().status == "OK") {
                             this._pickup_location = res.json().results[0].formatted_address;
                             this.userCoordinate = res.json().results[0].geometry.location;
+                            this._pickup_lat = this.userCoordinate.lat;
+                            this._pickup_lng = this.userCoordinate.lng;
                         } else {
                             this.toastCtrl.create({
                                 message: 'Error! Please insert correct address',
@@ -86,6 +94,8 @@ export class GetRidePage {
                     if (res.json().status == "OK") {
                         this._pickup_location = res.json().results[0].formatted_address;
                         this.userCoordinate = res.json().results[0].geometry.location;
+                        this._pickup_lat = this.userCoordinate.lat;
+                        this._pickup_lng = this.userCoordinate.lng;
                     } else {
                         this.toastCtrl.create({
                             message: 'Error! Please insert correct address',
@@ -177,6 +187,8 @@ export class GetRidePage {
                 this._pickup_location,
                 this._price,
                 this.user_id,
+                this._pickup_lat,
+                this._pickup_lng
 
             ).subscribe(res => {
                 console.log(res);

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams, ToastController, LoadingController, } from 'ionic-angular';
+import { NavController, NavParams, ToastController, LoadingController, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
 import { NgForm } from '@angular/forms';
 
@@ -22,7 +22,8 @@ export class Login {
         public authService: AuthService,
         private toastCtrl: ToastController,
         public storage: Storage,
-        public loadingCtrl: LoadingController) {
+        public loadingCtrl: LoadingController,
+        public events: Events) {
 
         if (navParams.data.message != null) {
 
@@ -44,10 +45,26 @@ export class Login {
 
         if (form.valid) {
             this.authService.login(this.login).subscribe(res => {
+
+                if (res.code == 500) {
+                    this.toastCtrl.create({
+                        message: res.message,
+                        duration: 1500,
+                        position: 'bottom'
+                    }).present();
+
+                    loader.dismiss();
+                    return;
+                }
                 this.storage.set('user', res.data);
                 loader.dismiss();
+                console.log(res);
+
+
+                this.events.publish('user:login', res.data);
+
                 this.navCtrl.setRoot(DashboardPage, {
-                    "message": "Hello " + res.data.name
+                    "message": "Hello " + res.data ? res.data.name : 'Unknown'
                 });
 
             }, err => {

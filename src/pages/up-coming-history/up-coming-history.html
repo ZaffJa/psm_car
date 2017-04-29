@@ -1,3 +1,6 @@
+<ion-content>
+    Hello
+</ion-content>
 <ion-content *ngIf="_transactions?.data" padding>
     <ion-list *ngFor="let transaction of _transactions.data">
         <div *ngIf="transaction.request_type == 1" (click)="viewRequest(transaction)">
@@ -26,6 +29,7 @@
         </div>
     </ion-list>
     <ion-list>
+        <br><br><br>
         <h1 *ngIf="_transactions.data.length < 1">No transactions made yet</h1>
     </ion-list>
 </ion-content>

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { HistoryPage } from '../history/history';
+import { GetRidePage } from '../get-ride/get-ride';
+import { GetCarPage } from '../get-car/get-car';
 import { UpComingHistoryPage } from '../up-coming-history/up-coming-history';
 
 @Component({

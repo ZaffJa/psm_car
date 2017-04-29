@@ -79,7 +79,7 @@
                 </ion-label>
             </ion-col>
             <ion-col col-1>
-                <button padding ion-button (click)="call(transaction?.user?.phone)" clear><ion-icon name="locate"></ion-icon></button>
+                <button padding ion-button (click)="openMap(transaction?.pickup_lat,transaction?.pickup_lng,transaction?.pickup_location)" clear><ion-icon name="locate"></ion-icon></button>
             </ion-col>
         </ion-row>
         <ion-row *ngIf="transaction.request_type == 1">
@@ -92,7 +92,7 @@
                 </ion-label>
             </ion-col>
             <ion-col col-1>
-                <button padding ion-button (click)="call(transaction?.user?.phone)" clear><ion-icon name="locate"></ion-icon></button>
+                <button padding ion-button (click)="openMap(transaction?.location?.lat,transaction?.location?.lng,transaction?.location?.name)" clear><ion-icon name="locate"></ion-icon></button>
             </ion-col>
         </ion-row>
         <ion-row>
@@ -107,9 +107,9 @@
             <ion-col col-12 *ngIf="transaction.status == 1">
                 <button ion-button full (click)="doneRequest(transaction.id)" color="primary">Done Request</button>
             </ion-col>
-            <ion-col col-12 *ngIf="transaction.status == 2">
+            <!--<ion-col col-12 *ngIf="transaction.status == 2">
                 <button ion-button full color="dark">Print Receipt</button>
-            </ion-col>
+            </ion-col>-->
             <ion-col col-12 *ngIf="transaction.status == 0">
                 <button ion-button full color="danger" (click)="userCancelRequest(transaction.id)">Cancel Request</button>
             </ion-col>

@@ -30,6 +30,7 @@ export class RegisterPage {
                 Validators.minLength(5),
                 Validators.pattern('[a-zA-Z ]*') // Accepts alphabets and spaces only
                 ])],
+            email: ["", Validators.pattern(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)],
             phone: ["", Validators.compose([
                 Validators.required,
                 Validators.minLength(10),

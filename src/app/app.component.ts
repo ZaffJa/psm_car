@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, Events } from 'ionic-angular';
 import { StatusBar, Splashscreen } from 'ionic-native';
 import { Storage } from '@ionic/storage';
 
@@ -9,10 +9,10 @@ import { GetCarPage } from '../pages/get-car/get-car';
 import { GiveCarPage } from '../pages/give-car/give-car';
 import { GetRidePage } from '../pages/get-ride/get-ride';
 import { DashboardPage } from '../pages/dashboard/dashboard';
-import { HistoryPage } from '../pages/history/history';
-import { RegisterPage } from '../pages/register/register';
+// import { HistoryPage } from '../pages/history/history';
+// import { RegisterPage } from '../pages/register/register';
 import { SettingPage } from '../pages/setting/setting';
-import { GoogleMapsPage } from '../pages/google-maps/google-maps';
+// import { GoogleMapsPage } from '../pages/google-maps/google-maps';
 import { HistoryTabPage } from '../pages/history-tab/history-tab';
 
 
@@ -38,18 +38,7 @@ export class MyApp {
 
     }>;
 
-    constructor(public platform: Platform, private storage: Storage, private authService: AuthService) {
-
-        this.storage.get('user').then(res => {
-            if (res != null) {
-                this.user = res;
-
-                this.rootPage = DashboardPage;
-
-            } else {
-                this.rootPage = Login;
-            }
-        });
+    constructor(public platform: Platform, private storage: Storage, private authService: AuthService, public events: Events) {
 
         this.pages = [{
             title: 'REQUEST RIDE',
@@ -71,9 +60,67 @@ export class MyApp {
             component: SettingPage,
             icon: 'contact'
         }];
-        this.initializeApp();
+
+        this.storage.get('user').then(res => {
+            if (res != null) {
+                this.user = res;
+
+                this.rootPage = DashboardPage;
+
+                this.initializeApp();
+
+            } else {
+                this.rootPage = Login;
+            }
+        });
+
+
+
+        events.subscribe('user:login', (user) => {
+            this.user = user;
+        });
     }
 
+    ionViewWillEnter() {
+
+    }
+
+
+    sideMenu() {
+
+        this.storage.get('user').then(res => {
+            if (res != null) {
+                this.user = res;
+
+                this.rootPage = DashboardPage;
+                this.pages = [{
+                    title: 'REQUEST RIDE',
+                    component: GetRidePage,
+                    icon: 'subway'
+                },
+                {
+                    title: 'REQUEST CAR',
+                    component: GetCarPage,
+                    icon: 'car'
+                },
+                {
+                    title: 'MY HISTORY',
+                    component: HistoryTabPage,
+                    icon: 'book'
+                },
+                {
+                    title: 'PROFILE',
+                    component: SettingPage,
+                    icon: 'contact'
+                }];
+
+
+            } else {
+                this.rootPage = Login;
+            }
+        });
+
+    }
     initializeApp() {
 
         this.platform.ready().then(() => {

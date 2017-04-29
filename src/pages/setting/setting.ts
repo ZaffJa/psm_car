@@ -37,6 +37,7 @@ export class SettingPage {
 
       let toggle = false;
       let phone: string = "";
+      let email: string = "";
 
       if (user.role_id == 3) {
         toggle = true;
@@ -45,6 +46,9 @@ export class SettingPage {
       if (user.phone != null) {
         phone = "" + user.phone;
       }
+      if (user.email != null) {
+        email = "" + user.email;
+      }
 
       console.log(user);
 
@@ -52,6 +56,7 @@ export class SettingPage {
         user_id: [user.id],
         old_password: ["", Validators.required],
         password: ["", Validators.required],
+        email: [email, Validators.required],
         phone: [phone, Validators.compose([
           Validators.required,
           Validators.minLength(10),
