@@ -13,7 +13,7 @@
         <ion-item *ngIf="transaction.request_type == 1" (click)="showConfirm(transaction?.id)">
             <ion-thumbnail item-left>
                 <img src="{{ transaction?.location?.file_path }}" *ngIf="transaction.location?.file_path">
-                <img src="assets/img/b_no_image_icon.gif">
+                <img src="assets/img/b_no_image_icon.gif" *ngIf="!transaction.location?.file_path">
             </ion-thumbnail>
             <h2>Destination : {{ transaction.location?.name }} </h2>
             <p>Price : {{ transaction?.price | currency:'MYR':true:'1.2-2' }}</p>
